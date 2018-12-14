@@ -89,9 +89,9 @@ class WidgetsUtils {
     if (slideData != null && slideData.length > 0) {
       for (var i = 0; i < slideData.length; i++) {
         var item = slideData[i];
-        var imgUrl = item['imagePath'];
-        var title = item['title'];
-        var detailUrl = item['url'];
+        var imgUrl = item['news']['img_url'];
+        var title = item['news']['title'];
+        var detailUrl = item['link'];
         items.add(new GestureDetector(
           onTap: () {
             // 详情跳转

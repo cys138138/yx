@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yx/pages/IndexPage.dart';
+import 'package:yx/pages/PackagePage.dart';
 import 'package:yx/pages/SystemPage.dart';
 import 'package:yx/utils/net/ParamsUtils.dart';
 import 'pages/NewsListPage.dart';
@@ -39,7 +41,7 @@ class MyMainState extends State<MyApp> {
   var _body;
 
   // 菜单文案
-  var tabTitles = ['文章', '体系', '发现', '我的'];
+  var tabTitles = ['约享', '套餐', '发现', '我的'];
 
   // 路由map
   Map<String, WidgetBuilder> _routes = new Map();
@@ -74,8 +76,8 @@ class MyMainState extends State<MyApp> {
     }
     _body = new IndexedStack(
       children: <Widget>[
-        new NewsListPage(),
-        new SystemPage(),
+        new IndexPage(),
+        new PackagePage(),
         new DiscoveryPage(),
         new MyInfoPage()
       ],
@@ -122,14 +124,17 @@ class MyMainState extends State<MyApp> {
   Widget build(BuildContext context) {
     initData();
     return new MaterialApp(
-      theme: new ThemeData(primaryColor: const Color(0xFF63CA6C)),
+      theme: new ThemeData(primaryColor: const Color.fromARGB(255, 252, 130, 45)),
 //      routes: _routes,
       home: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(tabTitles[_tabIndex],
-                style: new TextStyle(color: Colors.white)),
-            iconTheme: new IconThemeData(color: Colors.white),
-          ),
+//          appBar: new AppBar(
+//            title: new Center(child:
+//              new Text(tabTitles[_tabIndex],
+//                  style: new TextStyle(color: Colors.white)
+//              ),
+//            ),
+//            iconTheme: new IconThemeData(color: Colors.white),
+//          ),
           body: _body,
           bottomNavigationBar: new CupertinoTabBar(
             items: getBottomNavigationBarItem(),
