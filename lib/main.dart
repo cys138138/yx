@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yx/pages/ConsumptionPage.dart';
 import 'package:yx/pages/IndexPage.dart';
 import 'package:yx/pages/PackagePage.dart';
 import 'package:yx/pages/SystemPage.dart';
@@ -41,7 +42,7 @@ class MyMainState extends State<MyApp> {
   var _body;
 
   // 菜单文案
-  var tabTitles = ['约享', '套餐', '发现', '我的'];
+  var tabTitles = ['约享', '套餐', '消费', '我的'];
 
   // 路由map
   Map<String, WidgetBuilder> _routes = new Map();
@@ -78,7 +79,7 @@ class MyMainState extends State<MyApp> {
       children: <Widget>[
         new IndexPage(),
         new PackagePage(),
-        new DiscoveryPage(),
+        new ConsumptionPage(),
         new MyInfoPage()
       ],
       index: _tabIndex,

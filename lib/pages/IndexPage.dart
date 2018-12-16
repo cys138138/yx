@@ -96,6 +96,7 @@ class NewsListPageState extends State<IndexPage> {
                       itemBuilder: (BuildContext context, int index)=>rendBanner(index),
                       itemCount: bannerDataList.length,
                       itemWidth: MediaQuery.of(context).size.width,
+                          autoplay:true,
                       loop: true,
                     ))),
               ),
