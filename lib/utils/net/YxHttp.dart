@@ -27,6 +27,7 @@ class YxHttp {
       _url += paramStr;
     }
     print('url是$url');
+    print('完整url是$_url');
     http.Response res = await http.get(_url);
     if (res.statusCode == 200) {
       var cookie = res.headers['set-cookie'];

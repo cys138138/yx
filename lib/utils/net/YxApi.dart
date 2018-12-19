@@ -36,6 +36,8 @@ class YxApi {
 //  首页文章列表
   static final String HOME_ARTICLE = 'api/news/list/';
 
+  static final String NEWS_DETAIL = 'api/news/';
+
 //  体系
   static final String HOME_SYSTEM = 'tree/json';
 
