@@ -28,6 +28,7 @@ dependencies:
   fluttertoast: ^2.0.7
   event_bus: "^1.0.1"
   flutter_swiper : 1.1.4
+  flutter_html: ^0.8.2
   http: ^0.12.0
 
 dev_dependencies:
