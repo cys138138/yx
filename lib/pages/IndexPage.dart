@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_refresh/flutter_refresh.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:yx/pages/news/YxNewsDetailPage.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
@@ -154,7 +155,9 @@ class NewsListPageState extends State<IndexPage> {
         child: row,
         onTap: () {
           Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (context) {}));
+              .push(new MaterialPageRoute(builder: (context) {
+                return new YxNewsDetailPage(itemData['id'],itemData['url'],itemData['title']);
+          }));
         },
       );
     }
@@ -171,6 +174,7 @@ class NewsListPageState extends State<IndexPage> {
           var mapItem = banners[i]['news'];
           dataList.add({
             "url": "",
+            "id": mapItem["id"],
             "title": mapItem['title'],
             "sub_title": mapItem['title'],
             'img_url': mapItem['img_url'],

@@ -17,7 +17,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   var userAvatar;
   var userName;
-  var titles = ["我的消息", "阅读记录", "我的博客", "我的问答", "我的活动", "我的团队", "邀请好友"];
+  var titles = ["我的消费记录", "推广列表", "流水明细", "绑定银行卡", "个人信息", "我的团队", "邀请好友"];
   var imagePaths = [
     "images/ic_my_message.png",
     "images/ic_my_blog.png",
@@ -63,7 +63,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
         Widget>[
       new SliverAppBar(
         pinned: false,
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromARGB(255, 249, 109, 43),
         expandedHeight: 200.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: new InkWell(
