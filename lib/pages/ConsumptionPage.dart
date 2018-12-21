@@ -26,10 +26,16 @@ class Consumption extends State<ConsumptionPage>
   var titleDecoration =
       new BoxDecoration(color: Color.fromARGB(240, 240, 243, 255));
 
+  var hotStarData=[];
+
+  var allStarList = [];
+
   void initState() {
     super.initState();
+
     //初始化选项
     _initTabData();
+    _initHotStarData();
   }
 
   @override
@@ -82,7 +88,18 @@ class Consumption extends State<ConsumptionPage>
   }
 
   CustomScrollView _getTabBarViewPage(String pid) {
-    print("$pid is sss");
+    var _choiceType = [];
+    for(int k = 0;k<allStarList.length;k++){
+      if(allStarList[k]['stype']['id'] == pid){
+        _choiceType.add(allStarList[k]);
+      }
+    }
+    int totalCount = _choiceType.length;
+    bool nodata = false;
+    if(_choiceType.length == 0){
+      totalCount = 1;
+      nodata = true;
+    }
     return new CustomScrollView(
       reverse: false,
       shrinkWrap: false,
@@ -113,8 +130,9 @@ class Consumption extends State<ConsumptionPage>
                 height: 150.0,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 10,
+                    itemCount: hotStarData.length,
                     itemBuilder: (context, index) {
+                      var Item = hotStarData[index];
                       return InkWell(
                           onTap: () {
                             print("点击了$index");
@@ -126,14 +144,14 @@ class Consumption extends State<ConsumptionPage>
                               children: <Widget>[
                                 new CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                      "https://img.zcool.cn/community/006eae59c73b61a8012053f847d75f.jpg"),
+                                      Item["img_url"]),
                                   radius: 35.0,
                                 ),
                                 new Center(
                                   child: new Padding(
                                     padding: EdgeInsets.all(5.0),
                                     child: new Text(
-                                      "$pid 私人定制",
+                                      Item["name"],
                                       style: titleStyle,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -143,7 +161,7 @@ class Consumption extends State<ConsumptionPage>
                                 new Center(
                                     child: new Center(
                                   child: new Text(
-                                    "$pid 明星介绍",
+                                    Item["desc"],
                                     style: timeStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -168,18 +186,24 @@ class Consumption extends State<ConsumptionPage>
             ],
           )),
         ),
-        SliverFixedExtentList(
+        new SliverFixedExtentList(
           itemExtent: 80.0,
-          delegate: SliverChildBuilderDelegate(
+          delegate: new SliverChildBuilderDelegate(
             (BuildContext context, int index) {
+             if(nodata){
+               print("没数据");
+               return new Center(
+                 child: new Text("暂无数据。。"),
+               );
+             }
               var row = ListTile(
                   leading: new CircleAvatar(
                     backgroundImage: NetworkImage(
-                        "https://img.zcool.cn/community/006eae59c73b61a8012053f847d75f.jpg"),
+                        _choiceType[index]["img_url"]),
                     radius: 30.0,
                   ),
                   title: new Text(
-                    "名字",
+                    _choiceType[index]["name"],
                     style: titleStyle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -187,7 +211,7 @@ class Consumption extends State<ConsumptionPage>
                   subtitle: new Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: new Text(
-                      "介绍",
+                      _choiceType[index]["desc"],
                       style: timeStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -197,6 +221,8 @@ class Consumption extends State<ConsumptionPage>
                     Icons.chevron_right,
                     color: Colors.orange,
                   ));
+
+
               return Column(
                 children: <Widget>[
                   InkWell(
@@ -210,7 +236,9 @@ class Consumption extends State<ConsumptionPage>
                   )
                 ],
               );
+
             },
+            childCount: totalCount,
           ),
         ),
       ],
@@ -236,6 +264,25 @@ class Consumption extends State<ConsumptionPage>
           tabList = tempList;
           mController = TabController(length: tabList.length, vsync: this);
         });
+
+      } catch (e) {
+        print('错误catch s $e');
+      }
+    });
+  }
+
+  void _initHotStarData() {
+    YxHttp.get(YxApi.STAR_ALL_LIST).then((res) {
+      try {
+        Map<String, dynamic> map = jsonDecode(res);
+
+        var _listData = map['content']['hot_star_list'];
+        var _all_star_list = map['content']['all_star_list'];
+        setState(() {
+          hotStarData = _listData;
+          allStarList = _all_star_list;
+        });
+
       } catch (e) {
         print('错误catch s $e');
       }
