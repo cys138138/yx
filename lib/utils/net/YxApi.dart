@@ -38,6 +38,8 @@ class YxApi {
 
   static final String NEWS_DETAIL = 'api/news/';
 
+  static final String STAR_TYPE_LIST = 'api/star/startypelist/';
+
 //  体系
   static final String HOME_SYSTEM = 'tree/json';
 

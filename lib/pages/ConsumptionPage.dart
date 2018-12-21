@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:yx/utils/net/YxApi.dart';
+import 'package:yx/utils/net/YxHttp.dart';
 
 class ConsumptionPage extends StatefulWidget {
   @override
@@ -11,14 +15,16 @@ class ConsumptionPage extends StatefulWidget {
 class Consumption extends State<ConsumptionPage>
     with SingleTickerProviderStateMixin {
   var titleStyle = new TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
-  var tabtitleStyle = new TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
+  var tabtitleStyle =
+      new TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
 
   var timeStyle = new TextStyle(fontSize: 11.0, color: Colors.grey);
 
-  List<TabTitle> tabList;
+  List<TabTitle> tabList = List();
   TabController mController;
 
-  var titleDecoration = new BoxDecoration(color: Color.fromARGB(240, 240, 243, 255));
+  var titleDecoration =
+      new BoxDecoration(color: Color.fromARGB(240, 240, 243, 255));
 
   void initState() {
     super.initState();
@@ -57,6 +63,8 @@ class Consumption extends State<ConsumptionPage>
                 unselectedLabelColor: Color(0xff666666),
                 labelStyle: TextStyle(fontSize: 16.0),
                 tabs: tabList.map((item) {
+                  print("渲染阶段");
+                  print(item.tabWidget);
                   return item.tabWidget;
                 }).toList(),
               ),
@@ -92,7 +100,10 @@ class Consumption extends State<ConsumptionPage>
               new Container(
                 child: new Align(
                   alignment: Alignment.centerLeft,
-                  child: new Text("热门活动",style: tabtitleStyle,),
+                  child: new Text(
+                    "热门活动",
+                    style: tabtitleStyle,
+                  ),
                 ),
                 decoration: titleDecoration,
                 padding: EdgeInsets.all(10.0),
@@ -148,7 +159,10 @@ class Consumption extends State<ConsumptionPage>
               new Container(
                 child: new Align(
                   alignment: Alignment.centerLeft,
-                  child: new Text("艺人列表",style: tabtitleStyle,),
+                  child: new Text(
+                    "艺人列表",
+                    style: tabtitleStyle,
+                  ),
                 ),
                 decoration: titleDecoration,
                 padding: EdgeInsets.all(10.0),
@@ -206,12 +220,39 @@ class Consumption extends State<ConsumptionPage>
   }
 
   void _initTabData() {
-    tabList = List<TabTitle>.generate(20, (int i) {
-      return new TabTitle(
-          new Tab(
-            child: new Text("测试$i"),
-          ),
-          i);
+//    tabList = List<TabTitle>.generate(1, (int i) {
+//      return new TabTitle(
+//          new Tab(
+//            child: new Text("全部"),
+//          ),
+//          i);
+//    });
+
+  if(tabList.length > 0){
+    return;
+  }
+    YxHttp.get(YxApi.STAR_TYPE_LIST).then((res) {
+      try {
+        Map<String, dynamic> map = jsonDecode(res);
+
+        var _listData =  map['content']['products'];
+        List<TabTitle> xx = List();
+        for (var i = 0; i < _listData.length; i++) {
+          print("看看有没有执行到");
+        xx.add(new TabTitle(
+            new Tab(
+            child: new Text(_listData[i]['name']),
+            ),
+            i));
+        }
+        //湛文看好了
+        setState(() {
+          tabList = xx;
+          print(tabList);
+        });
+      } catch (e) {
+        print('错误catch s $e');
+      }
     });
   }
 }
