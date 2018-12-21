@@ -30,7 +30,6 @@ class Consumption extends State<ConsumptionPage>
     super.initState();
     //初始化选项
     _initTabData();
-    mController = TabController(length: tabList.length, vsync: this);
   }
 
   @override
@@ -63,8 +62,6 @@ class Consumption extends State<ConsumptionPage>
                 unselectedLabelColor: Color(0xff666666),
                 labelStyle: TextStyle(fontSize: 16.0),
                 tabs: tabList.map((item) {
-                  print("渲染阶段");
-                  print(item.tabWidget);
                   return item.tabWidget;
                 }).toList(),
               ),
@@ -84,7 +81,8 @@ class Consumption extends State<ConsumptionPage>
     );
   }
 
-  CustomScrollView _getTabBarViewPage(int pid) {
+  CustomScrollView _getTabBarViewPage(String pid) {
+    print("$pid is sss");
     return new CustomScrollView(
       reverse: false,
       shrinkWrap: false,
@@ -220,35 +218,23 @@ class Consumption extends State<ConsumptionPage>
   }
 
   void _initTabData() {
-//    tabList = List<TabTitle>.generate(1, (int i) {
-//      return new TabTitle(
-//          new Tab(
-//            child: new Text("全部"),
-//          ),
-//          i);
-//    });
-
-  if(tabList.length > 0){
-    return;
-  }
     YxHttp.get(YxApi.STAR_TYPE_LIST).then((res) {
       try {
         Map<String, dynamic> map = jsonDecode(res);
 
-        var _listData =  map['content']['products'];
-        List<TabTitle> xx = List();
+        var _listData = map['content']['products'];
+        List<TabTitle> tempList = List();
         for (var i = 0; i < _listData.length; i++) {
-          print("看看有没有执行到");
-        xx.add(new TabTitle(
-            new Tab(
-            child: new Text(_listData[i]['name']),
-            ),
-            i));
+          tempList.add(new TabTitle(
+              new Tab(
+                child: new Text(_listData[i]['name']),
+              ),
+              _listData[i]['id']));
         }
         //湛文看好了
         setState(() {
-          tabList = xx;
-          print(tabList);
+          tabList = tempList;
+          mController = TabController(length: tabList.length, vsync: this);
         });
       } catch (e) {
         print('错误catch s $e');
@@ -258,7 +244,7 @@ class Consumption extends State<ConsumptionPage>
 }
 
 class TabTitle {
-  int pid;
+  String pid;
   Widget tabWidget;
   TabTitle(this.tabWidget, this.pid);
 }
