@@ -20,7 +20,7 @@ class IndexPage extends StatefulWidget {
 class NewsListPageState extends State<IndexPage> {
   var bannerDataList = [];
 
-  var listData=[];
+  var listData = [];
   // 分页
   var _mCurPage = 0;
   Utf8Decoder decode = new Utf8Decoder();
@@ -43,7 +43,7 @@ class NewsListPageState extends State<IndexPage> {
           backgroundColor: Colors.green,
         ),
       );
-    }else{
+    } else {
       return new Refresh(
         onFooterRefresh: onFooterRefresh,
         onHeaderRefresh: onHeaderRefresh,
@@ -51,7 +51,7 @@ class NewsListPageState extends State<IndexPage> {
             {ScrollController controller, ScrollPhysics physics}) {
           return new Container(
               child: new ListView.builder(
-                // 这里itemCount是将轮播图组件、分割线和列表items都作为ListView的item算了
+                  // 这里itemCount是将轮播图组件、分割线和列表items都作为ListView的item算了
                   itemCount: listData.length * 2 + 1,
                   controller: controller,
                   physics: physics,
@@ -59,7 +59,6 @@ class NewsListPageState extends State<IndexPage> {
         },
       );
     }
-
   }
 
   rendRow(int i) {
@@ -94,10 +93,11 @@ class NewsListPageState extends State<IndexPage> {
                     width: MediaQuery.of(context).size.width - 50,
                     child: new Center(
                         child: Swiper(
-                      itemBuilder: (BuildContext context, int index)=>rendBanner(index),
+                      itemBuilder: (BuildContext context, int index) =>
+                          rendBanner(index),
                       itemCount: bannerDataList.length,
                       itemWidth: MediaQuery.of(context).size.width,
-                          autoplay:true,
+                      autoplay: true,
                       loop: true,
                     ))),
               ),
@@ -133,30 +133,32 @@ class NewsListPageState extends State<IndexPage> {
 
       var itemData = listData[i];
       var row = new ListTile(
-        leading: new ClipRRect(
-          borderRadius: BorderRadius.circular(3.0),
-          child: new Image.network(
-            itemData["img_url"],
-            width: 100.0,
-            height: 60.0,
-            fit: BoxFit.cover,
+          leading: new ClipRRect(
+            borderRadius: BorderRadius.circular(3.0),
+            child: new Image.network(
+              itemData["img_url"],
+              width: 100.0,
+              height: 60.0,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        title: new Text(
-          itemData["title"],
-          style: titleStyle,
-        ),
-        subtitle: new Padding(padding: EdgeInsets.only(top: 5.0),child:
-          new Text(itemData["create_at"],
-          style: timeStyle,
+          title: new Text(
+            itemData["title"],
+            style: titleStyle,
           ),
-        ));
+          subtitle: new Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child: new Text(
+              itemData["create_at"],
+              style: timeStyle,
+            ),
+          ));
       return new InkWell(
         child: row,
         onTap: () {
-          Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (context) {
-                return new YxNewsDetailPage(itemData['id'],itemData['url'],itemData['title']);
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new YxNewsDetailPage(
+                itemData['id'], itemData['url'], itemData['title']);
           }));
         },
       );
@@ -192,7 +194,7 @@ class NewsListPageState extends State<IndexPage> {
 
   // 获取文章列表数据
   getNewsList(int curPage) {
-    var url = YxApi.HOME_ARTICLE+"?page="+ curPage.toString();
+    var url = YxApi.HOME_ARTICLE + "?page=" + curPage.toString();
     YxHttp.get(url).then((res) {
       try {
         Map<String, dynamic> map = jsonDecode(res);
@@ -217,7 +219,6 @@ class NewsListPageState extends State<IndexPage> {
         _mCurPage++;
         getNewsList(_mCurPage);
       });
-
     });
   }
 
@@ -230,13 +231,20 @@ class NewsListPageState extends State<IndexPage> {
   }
 
   Widget rendBanner(int i) {
-    return new ClipRRect(
-      borderRadius: BorderRadius.circular(5.0),
-      child: new Image.network(
-        bannerDataList[i]['img_url'],
-        fit: BoxFit.cover,
-      ),
-    );
-
+    return new InkWell(
+        onTap: () {
+          var itemData = bannerDataList[i];
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new YxNewsDetailPage(
+                itemData['id'], itemData['url'], itemData['title']);
+          }));
+        },
+        child: new ClipRRect(
+          borderRadius: BorderRadius.circular(5.0),
+          child: new Image.network(
+            bannerDataList[i]['img_url'],
+            fit: BoxFit.cover,
+          ),
+        ));
   }
 }
