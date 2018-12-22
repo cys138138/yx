@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:yx/pages/star/YxStarDetailPage.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
@@ -90,7 +91,7 @@ class Consumption extends State<ConsumptionPage>
   CustomScrollView _getTabBarViewPage(String pid) {
     var _choiceType = [];
     for(int k = 0;k<allStarList.length;k++){
-      if(allStarList[k]['stype']['id'] == pid){
+      if(pid == "0"|| allStarList[k]['stype']['id'] == pid){
         _choiceType.add(allStarList[k]);
       }
     }
@@ -100,17 +101,13 @@ class Consumption extends State<ConsumptionPage>
       totalCount = 1;
       nodata = true;
     }
-    return new CustomScrollView(
-      reverse: false,
-      shrinkWrap: false,
-      slivers: <Widget>[
-        new SliverAppBar(
-          pinned: false,
-          expandedHeight: 230.0,
-          backgroundColor: Colors.white,
-          iconTheme: new IconThemeData(color: Colors.transparent),
-          flexibleSpace: new SingleChildScrollView(
-              child: new Column(
+    var hotWidget = new SliverAppBar(
+      pinned: false,
+      expandedHeight: 230.0,
+      backgroundColor: Colors.white,
+      iconTheme: new IconThemeData(color: Colors.transparent),
+      flexibleSpace: new SingleChildScrollView(
+          child: new Column(
             children: <Widget>[
               new Container(
                 child: new Align(
@@ -135,7 +132,7 @@ class Consumption extends State<ConsumptionPage>
                       var Item = hotStarData[index];
                       return InkWell(
                           onTap: () {
-                            print("点击了$index");
+                            tapRow(Item);
                           },
                           child: new Container(
                             width: 100.0,
@@ -160,13 +157,13 @@ class Consumption extends State<ConsumptionPage>
                                 ),
                                 new Center(
                                     child: new Center(
-                                  child: new Text(
-                                    Item["desc"],
-                                    style: timeStyle,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )),
+                                      child: new Text(
+                                        Item["desc"],
+                                        style: timeStyle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    )),
                               ],
                             ),
                           ));
@@ -185,71 +182,88 @@ class Consumption extends State<ConsumptionPage>
               ),
             ],
           )),
-        ),
+    );
+    List<Widget> _li = [
         new SliverFixedExtentList(
-          itemExtent: 80.0,
-          delegate: new SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-             if(nodata){
-               print("没数据");
-               return new Center(
-                 child: new Text("暂无数据。。"),
-               );
-             }
-              var row = ListTile(
-                  leading: new CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        _choiceType[index]["img_url"]),
-                    radius: 30.0,
-                  ),
-                  title: new Text(
-                    _choiceType[index]["name"],
-                    style: titleStyle,
+        itemExtent: 80.0,
+        delegate: new SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+            if(nodata){
+              print("没数据");
+              return new Center(
+                child: new Text("暂无数据。。"),
+              );
+            }
+            var row = ListTile(
+                leading: new CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      _choiceType[index]["img_url"]),
+                  radius: 30.0,
+                ),
+                title: new Text(
+                  _choiceType[index]["name"],
+                  style: titleStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: new Padding(
+                  padding: EdgeInsets.only(top: 5.0),
+                  child: new Text(
+                    _choiceType[index]["desc"],
+                    style: timeStyle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: new Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: new Text(
-                      _choiceType[index]["desc"],
-                      style: timeStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  trailing: new Icon(
-                    Icons.chevron_right,
-                    color: Colors.orange,
-                  ));
+                ),
+                trailing: new Icon(
+                  Icons.chevron_right,
+                  color: Colors.orange,
+                ));
 
 
-              return Column(
-                children: <Widget>[
-                  InkWell(
-                    child: row,
-                    onTap: () {
-                      print("$index i clik");
-                    },
-                  ),
-                  new Divider(
-                    height: 1.0,
-                  )
-                ],
-              );
+            return Column(
+              children: <Widget>[
+                InkWell(
+                  child: row,
+                  onTap: () {
+                    tapRow(_choiceType[index]);
+                  },
+                ),
+                new Divider(
+                  height: 1.0,
+                )
+              ],
+            );
 
-            },
-            childCount: totalCount,
-          ),
+          },
+          childCount: totalCount,
         ),
-      ],
+      ),
+
+    ];
+
+    if("0".contains(pid)){
+      _li.insert(0, hotWidget);
+    }
+
+    return new CustomScrollView(
+      reverse: false,
+      shrinkWrap: false,
+      slivers: _li,
     );
   }
 
   void _initTabData() {
+    tabList = [];
+    setState(() {
+      tabList.add(new TabTitle(
+          new Tab(
+            child: new Text("全部"),
+          ),"0"));
+    });
     YxHttp.get(YxApi.STAR_TYPE_LIST).then((res) {
       try {
         Map<String, dynamic> map = jsonDecode(res);
-
         var _listData = map['content']['products'];
         List<TabTitle> tempList = List();
         for (var i = 0; i < _listData.length; i++) {
@@ -261,7 +275,7 @@ class Consumption extends State<ConsumptionPage>
         }
         //湛文看好了
         setState(() {
-          tabList = tempList;
+          tabList.addAll(tempList);
           mController = TabController(length: tabList.length, vsync: this);
         });
 
@@ -287,6 +301,13 @@ class Consumption extends State<ConsumptionPage>
         print('错误catch s $e');
       }
     });
+  }
+
+  void tapRow(item) {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new YxStarDetailPage(
+          item['id'], "", item['name']);
+    }));
   }
 }
 

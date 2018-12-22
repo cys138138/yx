@@ -44,7 +44,10 @@ class NewsListPageState extends State<IndexPage> {
         ),
       );
     } else {
-      return new Refresh(
+
+
+
+        var _body = new Refresh(
         onFooterRefresh: onFooterRefresh,
         onHeaderRefresh: onHeaderRefresh,
         childBuilder: (BuildContext context,
@@ -58,6 +61,16 @@ class NewsListPageState extends State<IndexPage> {
                   itemBuilder: (context, i) => rendRow(i)));
         },
       );
+
+        return new Scaffold(
+          appBar: new AppBar(
+            title: new Center(
+              child: new Text("约享", style: new TextStyle(color: Colors.white)),
+            ),
+            elevation: 0,
+          ),
+          body: _body,
+        );
     }
   }
 
@@ -65,18 +78,6 @@ class NewsListPageState extends State<IndexPage> {
     //第一行是banner
     if (i == 0) {
       return new Column(children: <Widget>[
-        new Container(
-          child: new Center(
-            child: new Text(
-              "约享",
-              style: new TextStyle(color: Colors.white, fontSize: 14.0),
-            ),
-          ),
-          decoration: new BoxDecoration(
-            color: const Color.fromARGB(255, 252, 130, 45),
-          ),
-          height: 40.0,
-        ),
         new Stack(
           children: <Widget>[
             new Container(
@@ -87,7 +88,7 @@ class NewsListPageState extends State<IndexPage> {
             ),
             new Container(
               margin: new EdgeInsets.only(top: 15.0),
-              height: 130.0,
+              height: 150.0,
               child: new Center(
                 child: new Container(
                     width: MediaQuery.of(context).size.width - 50,
