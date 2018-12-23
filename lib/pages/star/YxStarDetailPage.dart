@@ -16,7 +16,7 @@ class YxStarDetailPage extends StatefulWidget {
 
 class _NewsDetailPageState extends State<YxStarDetailPage> {
   String _url, _title, _id;
-  var newsDetail;
+  var newsDetail = Map();
 
   var wid;
 
@@ -25,23 +25,93 @@ class _NewsDetailPageState extends State<YxStarDetailPage> {
   @override
   void initState() {
     super.initState();
+    print(newsDetail.length);
+
     getNewsDetail(_id);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (newsDetail == null) {
-      wid = new Center(
+    var fleSpace;
+    var toboxAdapter;
+    var bottom;
+    if (newsDetail.length == 0) {
+      fleSpace = new Center(
         child: new CircularProgressIndicator(
           backgroundColor: Colors.green,
         ),
       );
-    } else if (newsDetail == false) {
-      wid = new Center(child: new Text("网络不通。。请重试吧！"));
-    }
-
-    return Scaffold(
-      bottomNavigationBar: new Container(
+      toboxAdapter = new Padding(padding: EdgeInsets.all(5.0));
+      bottom = new Padding(padding: EdgeInsets.all(5.0));
+    }else {
+      fleSpace = new FlexibleSpaceBar(
+        background: Image.network(
+          newsDetail["img_url"],
+          fit: BoxFit.cover,
+        ),
+      );
+      toboxAdapter = new Container(
+        padding: EdgeInsets.only(left: 10.0),
+        child: new Column(
+          children: <Widget>[
+            new Container(
+              height: 60.0,
+              child: new Padding(
+                padding: EdgeInsets.all(5.0),
+                child: new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      newsDetail["name"],
+                      style: new TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    )),
+              ),
+            ),
+            new Container(
+              child: new Padding(
+                padding: EdgeInsets.all(5.0),
+                child: new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      newsDetail["short_desc"],
+                      style: new TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey),
+                    )),
+              ),
+            ),
+            new Container(
+              child: new Padding(
+                padding: EdgeInsets.all(5.0),
+                child: new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      newsDetail["seconds"].toString() + "秒起",
+                      style: new TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange),
+                    )),
+              ),
+            ),
+            new Container(
+              child: new Padding(
+                padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                child: new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      newsDetail["desc"],
+                      style: new TextStyle(
+                          fontSize: 13.0, fontWeight: FontWeight.normal),
+                    )),
+              ),
+              height: 100.0,
+            ),
+          ],
+        ),
+      );
+      bottom = new Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
         child: new Container(
@@ -66,8 +136,7 @@ class _NewsDetailPageState extends State<YxStarDetailPage> {
                                 style: new TextStyle(
                                     fontSize: 11.0,
                                     fontWeight: FontWeight.normal,
-                                    color: Colors.grey
-                                ),
+                                    color: Colors.grey),
                               ),
                               new Text(
                                 newsDetail["seconds"].toString() + "秒起",
@@ -99,82 +168,27 @@ class _NewsDetailPageState extends State<YxStarDetailPage> {
             ],
           ),
         ),
-      ),
+      );
+    }
+
+    return Scaffold(
+      bottomNavigationBar: bottom,
       body: CustomScrollView(
         primary: true,
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: Colors.transparent,
+            //自定义按钮返回
+//            leading: new InkWell(child: new Icon(Icons.add),onTap: (){
+//              Navigator.of(context).pop();
+//            },),
+            iconTheme: new IconThemeData(color: Colors.white, opacity: 0.8),
             expandedHeight: 300.0,
-            flexibleSpace: new FlexibleSpaceBar(
-              background: Image.network(
-                newsDetail["img_url"],
-                fit: BoxFit.cover,
-              ),
-            ),
+            flexibleSpace: fleSpace,
           ),
           SliverToBoxAdapter(
-              child: new Container(
-                padding: EdgeInsets.only(left: 10.0),
-            child: new Column(
-              children: <Widget>[
-                new Container(
-                  height: 60.0,
-                  child: new Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: new Align(
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          newsDetail["name"],
-                          style: new TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
-                        )),
-                  ),
-                ),
-                new Container(
-                  child: new Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: new Align(
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          newsDetail["short_desc"],
-                          style: new TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black12),
-                        )),
-                  ),
-                ),
-                new Container(
-                  child: new Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: new Align(
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          newsDetail["seconds"].toString() + "秒起",
-                          style: new TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange),
-                        )),
-                  ),
-                ),
-                new Container(
-                  child: new Padding(
-                    padding: EdgeInsets.only(left:10.0,top: 5.0),
-                    child: new Align(
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          newsDetail["desc"],
-                          style: new TextStyle(
-                              fontSize: 13.0, fontWeight: FontWeight.normal),
-                        )),
-                  ),
-                  height: 100.0,
-                ),
-              ],
-            ),
-          )),
+              child: toboxAdapter
+          ),
         ],
       ),
     );
@@ -184,15 +198,18 @@ class _NewsDetailPageState extends State<YxStarDetailPage> {
     YxHttp.get(YxApi.STAR_DETAIL + _id + "/").then((res) {
       try {
         Map<String, dynamic> map = jsonDecode(res);
-        print("sssssssssss");
-        setState(() {
-          newsDetail = map['content']['products'];
+
+        Future.delayed(new Duration(milliseconds: 100),(){
+          setState(() {
+            newsDetail = map['content']['products'];
+          });
         });
       } catch (e) {
         print('错误catch s $e');
         setState(() {
-          newsDetail = false;
+          newsDetail = Map();
         });
+
       }
     });
   }

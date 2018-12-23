@@ -88,7 +88,7 @@ class NewsListPageState extends State<IndexPage> {
             ),
             new Container(
               margin: new EdgeInsets.only(top: 15.0),
-              height: 150.0,
+              height: 200.0,
               child: new Center(
                 child: new Container(
                     width: MediaQuery.of(context).size.width - 50,
