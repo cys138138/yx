@@ -183,6 +183,7 @@ class _NewsDetailPageState extends State<YxStarDetailPage>
     }
 
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       bottomNavigationBar: bottom,
       body: CustomScrollView(
         primary: true,
@@ -239,6 +240,9 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
     'selectSpecIndex': 0,
     'quantity': 1,
   };
+  int totalNums = 0;
+
+  TextEditingController textEditingController = new TextEditingController();
 
   Widget build(BuildContext context) {
     var _body = InkWell(
@@ -301,6 +305,44 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
                       }).toList(),
                     ),
                     new Container(
+                      width: 100.0,
+                      height: 40.0,
+                      margin: EdgeInsets.only(top: 20.0),
+                      child: new TextField(
+                        //文本输入控件
+                        onChanged: (String str) {
+                          //输入监听
+                          print('用户输入变更');
+                        },
+                        onSubmitted: (String str) {
+                          //提交监听
+                          print('用户提交变更');
+                        },
+                        keyboardType: TextInputType.number, //设置输入框文本类型
+                        controller: textEditingController, //控制器，控制文字内容
+                        textAlign: TextAlign.left, //设置内容显示位置是否居中等
+                        style: new TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.blueAccent,
+                        ),
+                        autofocus: false, //自动获取焦点
+                        decoration: new InputDecoration(
+                          labelText: '自定义秒数',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+//                icon: new Container(
+//                  padding: EdgeInsets.all(0.0),
+//                  child: new Icon(Icons.phone),
+//                ),
+//                errorText: '这是错误的errorText',
+                          contentPadding: EdgeInsets.fromLTRB(
+                              10.0, 10.0, 10.0, 10.0), //设置显示文本的一个内边距
+//                border: InputBorder.none,//取消默认的下划线边框
+                        ),
+                      ),
+                    ),
+                    new Container(
                       padding: EdgeInsets.only(top: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -331,7 +373,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
                                     ),
                                   ),
                                   onTap: () {
-                                    if(pageRowData['quantity'] == 1){
+                                    if (pageRowData['quantity'] == 1) {
                                       pageRowData['quantity'] = 1;
                                       TsUtils.showShort("数量不能小于1");
                                       return;
