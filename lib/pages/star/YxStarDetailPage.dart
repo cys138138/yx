@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class YxStarDetailPage extends StatefulWidget {
   String _url, _title, _id;
@@ -14,11 +15,14 @@ class YxStarDetailPage extends StatefulWidget {
   _NewsDetailPageState createState() => _NewsDetailPageState(_id, _url, _title);
 }
 
-class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderStateMixin{
+class _NewsDetailPageState extends State<YxStarDetailPage>
+    with TickerProviderStateMixin {
   String _url, _title, _id;
   var newsDetail = Map();
 
   var wid;
+
+  int fuckIndex = 0;
 
   _NewsDetailPageState(this._id, this._url, this._title);
 
@@ -43,7 +47,7 @@ class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderS
       );
       toboxAdapter = new Padding(padding: EdgeInsets.all(5.0));
       bottom = new Padding(padding: EdgeInsets.all(5.0));
-    }else {
+    } else {
       fleSpace = new FlexibleSpaceBar(
         background: Image.network(
           newsDetail["img_url"],
@@ -160,12 +164,11 @@ class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderS
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    showBottomSheet<State>(
+                    Future(() => showModalBottomSheet(
                         context: context,
-                        builder: (BuildContext context){
-                          return new bottomSheetDliog();
-                        }
-                    );
+                        builder: (context) {
+                          return ModalBottomSheet();
+                        }));
                   },
                 ),
                 decoration: BoxDecoration(
@@ -193,9 +196,7 @@ class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderS
             expandedHeight: 300.0,
             flexibleSpace: fleSpace,
           ),
-          SliverToBoxAdapter(
-              child: toboxAdapter
-          ),
+          SliverToBoxAdapter(child: toboxAdapter),
         ],
       ),
     );
@@ -206,7 +207,7 @@ class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderS
       try {
         Map<String, dynamic> map = jsonDecode(res);
 
-        Future.delayed(new Duration(milliseconds: 100),(){
+        Future.delayed(new Duration(milliseconds: 100), () {
           setState(() {
             newsDetail = map['content']['products'];
           });
@@ -216,193 +217,66 @@ class _NewsDetailPageState extends State<YxStarDetailPage>  with TickerProviderS
         setState(() {
           newsDetail = Map();
         });
-
       }
     });
   }
 }
 
-class bottomSheetDliog extends StatefulWidget{
-  State<StatefulWidget> createState() => new bottomSheetDliogState();
+class ModalBottomSheet extends StatefulWidget {
+  _ModalBottomSheetState createState() => _ModalBottomSheetState();
 }
-class bottomSheetDliogState extends State{
-  int buycount = 1;
-  @override
-  Widget build(BuildContext context){
-    return new Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey[300])),
-      ),
-      child: Stack(
-        overflow: Overflow.visible,
-        children: <Widget>[
-          //面板内容
-          new Positioned(
-            top: -25,
-            child: new Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      //商品缩略图
-                      ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        child: Image.asset('assets/images/short05.jpg', fit: BoxFit.cover, height: 120,),
+
+class _ModalBottomSheetState extends State<ModalBottomSheet>
+    with SingleTickerProviderStateMixin {
+  var heightOfModalBottomSheet = 100.0;
+
+  Widget build(BuildContext context) {
+
+    return InkWell(
+        child: Container(
+          height: 500.0,
+          child: new Stack(
+            children: <Widget>[
+              new Container(
+                height:50.0,
+                child: new Align(child: new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      flex: 1,
+                      child: new Row(
+                        // 为了让评论数显示在最右侧，所以需要外面的Expanded和这里的MainAxisAlignment.end
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          new IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.black,
+                              ), onPressed: (){
+                            Navigator.pop(context);
+                          })
+                        ],
                       ),
-                      //价格编号说明
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text('¥89.8', style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),),
-                            Text('商品编号：001', style: TextStyle(fontSize: 16),)
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  new Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 8),
-                    child: Text('产品规格', style: TextStyle(fontSize: 20),),
-                  ),
-                  new Row(
-                    children: <Widget>[
-                      new FlatButton(
-                        color: Color.fromARGB(255, 180, 10, 10),
-                        disabledColor: Color.fromARGB(255, 200, 10, 10),
-                        child: Text('时尚运动版', style: TextStyle(color: Colors.white),),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        onPressed: null,
-                      ),
-                      Text('    '),
-                      new FlatButton(
-                        color: Color.fromARGB(255, 180, 10, 10),
-                        child: Text('炫动休闲版', style: TextStyle(color: Color.fromARGB(255, 200, 10, 10)),),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Color.fromARGB(255, 200, 10, 10)),
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        onPressed: null,
-                      ),
-                    ],
-                  ),
-                  new Container(
-                    width: MediaQuery.of(context).size.width - 30,
-                    padding: EdgeInsets.only(top: 15, bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text('购买数量', style: TextStyle(fontSize: 20),),
-                        //数量选择器
-                        new Container(
-                          width: 100,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 30,
-                                child: new GestureDetector(
-                                  child: Icon(Icons.remove, size: 12,),
-                                  onTap: (){
-                                    setState(() {
-                                      if(buycount > 1){
-                                        buycount --;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                child: new Container(
-                                  alignment: AlignmentDirectional.center,
-                                  child: Text(buycount.toString(), style: TextStyle(color: Colors.grey),),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 30,
-                                child: new GestureDetector(
-                                  child: Icon(Icons.add, size: 12,),
-                                  onTap: (){
-                                    setState(() {
-                                      buycount ++;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    )
+
+                  ],
+                ),alignment: Alignment.topCenter,),
+              )
+              ,
+            ],
           ),
-          //弹出面板关闭按钮
-          new Positioned(
-            width: 30,
-            height: 30,
-            top: 8,
-            right: 8,
-            child: FloatingActionButton(
-              elevation: 0,
-              backgroundColor: Colors.black26,
-              child: Icon(Icons.close),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          //底部按钮组
-          new Positioned(
-            width: MediaQuery.of(context).size.width,
-            height: 80,
-            bottom: 0,
-            child: new Row(
-              children: <Widget>[
-                Expanded(
-                  child: FloatingActionButton(
-                    child: Text(' 加入购物车'),
-                    shape: Border(),
-                    backgroundColor: Color.fromARGB(255, 180, 10, 10),
-                    isExtended: true,
-                    onPressed: null,
-                  ),
-                ),
-                Expanded(
-                  child: FloatingActionButton(
-                    child: Text('立即购买'),
-                    shape: Border(),
-                    backgroundColor: Color.fromARGB(255, 230, 10, 10),
-                    onPressed: null,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      onTap: (){},
+    );
+
+    return Container(
+      height: heightOfModalBottomSheet,
+      child: RaisedButton(
+          child: Text("Press"),
+          onPressed: () {
+            heightOfModalBottomSheet += 100;
+            setState(() {});
+          }),
     );
   }
 }
+
