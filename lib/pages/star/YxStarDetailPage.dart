@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:yx/utils/toast/TsUtils.dart';
 
 class YxStarDetailPage extends StatefulWidget {
   String _url, _title, _id;
@@ -228,65 +229,201 @@ class ModalBottomSheet extends StatefulWidget {
 
 class _ModalBottomSheetState extends State<ModalBottomSheet>
     with SingleTickerProviderStateMixin {
+  Map pageRowData = {
+    'specifications': <Map>[
+      {'id': 1, 'name': '3000秒'},
+      {'id': 2, 'name': '5000秒'},
+      {'id': 3, 'name': '10000秒'},
+      {'id': 4, 'name': '15000秒'},
+    ],
+    'selectSpecIndex': 0,
+    'quantity': 1,
+  };
 
   Widget build(BuildContext context) {
-
-    return InkWell(
-        child: Container(
-          height: 500.0,
-          child: new Column(
-            children: <Widget>[
-              new Container(
-                height:50.0,
+    var _body = InkWell(
+      child: Container(
+        child: Stack(
+          overflow: Overflow.visible,
+          children: <Widget>[
+            //面板内容
+            new Container(
+              child: new Container(
                 width: MediaQuery.of(context).size.width,
-                child: new Align(child: new Row(
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Expanded(
-                      flex: 1,
-                      child: new Row(
-                        // 为了让评论数显示在最右侧，所以需要外面的Expanded和这里的MainAxisAlignment.end
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    //产品规格
+                    new Padding(
+                      padding: EdgeInsets.only(top: 15, bottom: 8),
+                      child: Text(
+                        '秒数规格',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    new Wrap(
+                      spacing: 8.0, // gap between adjacent chips
+                      runSpacing: 0,
+                      children:
+                          pageRowData['specifications'].map<Widget>((Map map) {
+                        int index = pageRowData['specifications'].indexOf(map);
+                        return new Padding(
+                          padding: EdgeInsets.all(0),
+                          child: new FlatButton(
+                            color: pageRowData['selectSpecIndex'] == index
+                                ? Color.fromARGB(255, 200, 10, 10)
+                                : null,
+                            disabledColor:
+                                pageRowData['selectSpecIndex'] == index
+                                    ? Color.fromARGB(255, 200, 10, 10)
+                                    : null,
+                            child: Text(
+                              map['name'],
+                              style: TextStyle(
+                                  color: pageRowData['selectSpecIndex'] == index
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 200, 10, 10)),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: Color.fromARGB(255, 200, 10, 10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                pageRowData['selectSpecIndex'] = index;
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    new Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          new IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.black,
-                              ), onPressed: (){
-                            Navigator.pop(context);
-                          })
+                          Text(
+                            '数量',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          //数量选择器
+                          new Container(
+                            width: 120,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                new InkWell(
+                                  child: new Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: Icon(
+                                      Icons.remove,
+                                      size: 16,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    if(pageRowData['quantity'] == 1){
+                                      pageRowData['quantity'] = 1;
+                                      TsUtils.showShort("数量不能小于1");
+                                      return;
+                                    }
+                                    int tempcount = --pageRowData['quantity'];
+                                    setState(() {
+                                      print("点击了减");
+                                      if (tempcount > 0) {
+                                        pageRowData['quantity'] = tempcount;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Expanded(
+                                  child: new Container(
+                                    alignment: AlignmentDirectional.center,
+                                    child: Text(
+                                      pageRowData['quantity'].toString(),
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                    ),
+                                  ),
+                                ),
+                                new InkWell(
+                                  child: new Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 16,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    int tempcount = ++pageRowData['quantity'];
+                                    setState(() {
+                                      print("点击了加");
+                                      if (tempcount > 0) {
+                                        pageRowData['quantity'] = tempcount;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    )
-
-                  ],
-                ),alignment: Alignment.topCenter,),
-              ),
-              new Container(
-                height: 30.0,
-                padding: EdgeInsets.all(10.0),
-                child: new Align(alignment: Alignment.centerLeft,child: new Text("购买秒数"),)),
-
-              new ListView.builder(itemBuilder: (context,index){
-                  return new Container(
-                    width: 60.0,
-                    padding: EdgeInsets.all(8.0),
-                    margin: EdgeInsets.all(8.0),
-                    decoration:new BoxDecoration(
-                        border: new Border.all(width: 1.0),
-                        borderRadius: new BorderRadius.circular(3.0)
                     ),
-                    child: new Center(child: new Text("3000"),),
-                  );
-              },
-              itemCount: 5,
-              scrollDirection:Axis.horizontal
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            //弹出面板关闭按钮
+            new Positioned(
+              width: 30,
+              height: 30,
+              top: 8,
+              right: 8,
+              child: FloatingActionButton(
+                elevation: 0,
+                backgroundColor: Colors.black26,
+                child: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            //底部按钮组
+            new Positioned(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              bottom: 0,
+              child: new Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FloatingActionButton(
+                      child: Text('确认预约'),
+                      shape: Border(),
+                      backgroundColor: Color.fromARGB(255, 230, 10, 10),
+                      onPressed: null,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
-      onTap: (){},
+      ),
+      onTap: () {},
     );
-
+    return _body;
   }
 }
-
