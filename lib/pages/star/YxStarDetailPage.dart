@@ -228,17 +228,17 @@ class ModalBottomSheet extends StatefulWidget {
 
 class _ModalBottomSheetState extends State<ModalBottomSheet>
     with SingleTickerProviderStateMixin {
-  var heightOfModalBottomSheet = 100.0;
 
   Widget build(BuildContext context) {
 
     return InkWell(
         child: Container(
           height: 500.0,
-          child: new Stack(
+          child: new Column(
             children: <Widget>[
               new Container(
                 height:50.0,
+                width: MediaQuery.of(context).size.width,
                 child: new Align(child: new Row(
                   children: <Widget>[
                     new Expanded(
@@ -260,23 +260,33 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
 
                   ],
                 ),alignment: Alignment.topCenter,),
-              )
-              ,
+              ),
+              new Container(
+                height: 30.0,
+                padding: EdgeInsets.all(10.0),
+                child: new Align(alignment: Alignment.centerLeft,child: new Text("购买秒数"),)),
+
+              new ListView.builder(itemBuilder: (context,index){
+                  return new Container(
+                    width: 60.0,
+                    padding: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(8.0),
+                    decoration:new BoxDecoration(
+                        border: new Border.all(width: 1.0),
+                        borderRadius: new BorderRadius.circular(3.0)
+                    ),
+                    child: new Center(child: new Text("3000"),),
+                  );
+              },
+              itemCount: 5,
+              scrollDirection:Axis.horizontal
+              ),
             ],
           ),
         ),
       onTap: (){},
     );
 
-    return Container(
-      height: heightOfModalBottomSheet,
-      child: RaisedButton(
-          child: Text("Press"),
-          onPressed: () {
-            heightOfModalBottomSheet += 100;
-            setState(() {});
-          }),
-    );
   }
 }
 
