@@ -37,16 +37,13 @@ class NewsListPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (listData.length == 0) {
+    if (listData.length == 0 || bannerDataList.length == 0) {
       return new Center(
         child: new CircularProgressIndicator(
           backgroundColor: Colors.green,
         ),
       );
     } else {
-
-
-
         var _body = new Refresh(
         onFooterRefresh: onFooterRefresh,
         onHeaderRefresh: onHeaderRefresh,

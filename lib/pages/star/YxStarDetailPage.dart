@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
 
 class YxStarDetailPage extends StatefulWidget {
@@ -20,11 +19,6 @@ class _NewsDetailPageState extends State<YxStarDetailPage>
     with TickerProviderStateMixin {
   String _url, _title, _id;
   var newsDetail = Map();
-
-  var wid;
-
-  int fuckIndex = 0;
-
   _NewsDetailPageState(this._id, this._url, this._title);
 
   @override
@@ -37,88 +31,26 @@ class _NewsDetailPageState extends State<YxStarDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    var fleSpace;
     var toboxAdapter;
+    var bgImg;
     var bottom;
     if (newsDetail.length == 0) {
-      fleSpace = new Center(
+      toboxAdapter = new Padding(padding: EdgeInsets.all(5.0));
+      bottom = new Padding(padding: EdgeInsets.all(5.0));
+      bgImg = new Center(
         child: new CircularProgressIndicator(
           backgroundColor: Colors.green,
         ),
       );
-      toboxAdapter = new Padding(padding: EdgeInsets.all(5.0));
-      bottom = new Padding(padding: EdgeInsets.all(5.0));
     } else {
-      fleSpace = new FlexibleSpaceBar(
-        background: Image.network(
-          newsDetail["img_url"],
-          fit: BoxFit.cover,
-        ),
+      bgImg = Image.network(
+        newsDetail["img_url"],
+        fit: BoxFit.cover,
       );
-      toboxAdapter = new Container(
-        padding: EdgeInsets.only(left: 10.0),
-        child: new Column(
-          children: <Widget>[
-            new Container(
-              height: 60.0,
-              child: new Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Align(
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      newsDetail["name"],
-                      style: new TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    )),
-              ),
-            ),
-            new Container(
-              child: new Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Align(
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      newsDetail["short_desc"],
-                      style: new TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey),
-                    )),
-              ),
-            ),
-            new Container(
-              child: new Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Align(
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      newsDetail["seconds"].toString() + "秒起",
-                      style: new TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange),
-                    )),
-              ),
-            ),
-            new Container(
-              child: new Padding(
-                padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                child: new Align(
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      newsDetail["desc"],
-                      style: new TextStyle(
-                          fontSize: 13.0, fontWeight: FontWeight.normal),
-                    )),
-              ),
-              height: 100.0,
-            ),
-          ],
-        ),
-      );
-      bottom = new Container(
+      bottom = new Positioned(
         width: MediaQuery.of(context).size.width,
         height: 50,
+        bottom: 0,
         child: new Container(
           height: 50,
           decoration: BoxDecoration(
@@ -156,50 +88,141 @@ class _NewsDetailPageState extends State<YxStarDetailPage>
                   ),
                 ),
               ),
-              new Container(
-                height: 50,
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: FlatButton(
-                  child: Text(
-                    '立即预约',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Future(() => showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return ModalBottomSheet();
-                        }));
-                  },
-                ),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 252, 130, 45),
-                ),
+              new Builder(
+                builder: (BuildContext context) {
+                  return new Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 252, 130, 45),
+                    ),
+                    child: new Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: FlatButton(
+                        child: Text(
+                          '立即预约',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Scaffold.of(context).showBottomSheet(
+                            (BuildContext context) {
+                              return ModalBottomSheet();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
         ),
       );
+      toboxAdapter = new Stack(
+        overflow: Overflow.clip,
+        children: <Widget>[
+          new Column(
+            children: <Widget>[
+              new Container(
+                height: 60.0,
+                child: new Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: new Align(
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        newsDetail["name"],
+                        style: new TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      )),
+                ),
+              ),
+              new Container(
+                child: new Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: new Align(
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        newsDetail["short_desc"],
+                        style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey),
+                      )),
+                ),
+              ),
+              new Container(
+                child: new Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: new Align(
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        newsDetail["seconds"].toString() + "秒起",
+                        style: new TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange),
+                      )),
+                ),
+              ),
+              new Container(
+                child: new Padding(
+                  padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                  child: new Align(
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        newsDetail["desc"],
+                        style: new TextStyle(
+                            fontSize: 13.0, fontWeight: FontWeight.normal),
+                      )),
+                ),
+              ),
+            ],
+          ),
+          bottom
+        ],
+      );
     }
 
-    return Scaffold(
-      resizeToAvoidBottomPadding: true,
-      bottomNavigationBar: bottom,
-      body: CustomScrollView(
-        primary: true,
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            //自定义按钮返回
-//            leading: new InkWell(child: new Icon(Icons.add),onTap: (){
-//              Navigator.of(context).pop();
-//            },),
-            iconTheme: new IconThemeData(color: Colors.white, opacity: 0.8),
-            expandedHeight: 300.0,
-            flexibleSpace: fleSpace,
+    List<Widget> _sliverBuilder(BuildContext context, bool innerBoxIsScrolled) {
+      return <Widget>[
+        SliverAppBar(
+          //标题居中
+          centerTitle: true,
+          //展开高度250
+          expandedHeight: 300.0,
+          //不随着滑动隐藏标题
+          floating: true,
+          //固定在顶部
+          pinned: true,
+          forceElevated: true,
+          elevation: 0,
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            // title: Text('我是一个FlexibleSpaceBar',),
+            background: bgImg,
           ),
-          SliverToBoxAdapter(child: toboxAdapter),
-        ],
+          leading: IconButton(
+            color: Colors.grey,
+            icon: BackButtonIcon(),
+            onPressed: () {
+              Navigator.pop(super.context);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          // title: Text('产品详情'),
+        )
+      ];
+    }
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: _sliverBuilder,
+          body: new Container(
+            child: toboxAdapter,
+          ),
+        ),
       ),
     );
   }
@@ -245,227 +268,227 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
   TextEditingController textEditingController = new TextEditingController();
 
   Widget build(BuildContext context) {
-    var _body = InkWell(
-      child: Container(
-        child: Stack(
-          overflow: Overflow.visible,
-          children: <Widget>[
-            //面板内容
-            new Container(
-              child: new Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    //产品规格
-                    new Padding(
-                      padding: EdgeInsets.only(top: 15, bottom: 8),
-                      child: Text(
-                        '秒数规格',
-                        style: TextStyle(fontSize: 20),
-                      ),
+    return new Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 2,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey[300])),
+      ),
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          //面板内容
+          new Container(
+            child: new Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  //产品规格
+                  new Padding(
+                    padding: EdgeInsets.only(top: 15, bottom: 8),
+                    child: Text(
+                      '秒数规格',
+                      style: TextStyle(fontSize: 20),
                     ),
-                    new Wrap(
-                      spacing: 8.0, // gap between adjacent chips
-                      runSpacing: 0,
-                      children:
-                          pageRowData['specifications'].map<Widget>((Map map) {
-                        int index = pageRowData['specifications'].indexOf(map);
-                        return new Padding(
-                          padding: EdgeInsets.all(0),
-                          child: new FlatButton(
-                            color: pageRowData['selectSpecIndex'] == index
-                                ? Color.fromARGB(255, 200, 10, 10)
-                                : null,
-                            disabledColor:
-                                pageRowData['selectSpecIndex'] == index
-                                    ? Color.fromARGB(255, 200, 10, 10)
-                                    : null,
-                            child: Text(
-                              map['name'],
-                              style: TextStyle(
-                                  color: pageRowData['selectSpecIndex'] == index
-                                      ? Colors.white
-                                      : Color.fromARGB(255, 200, 10, 10)),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: Color.fromARGB(255, 200, 10, 10)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                pageRowData['selectSpecIndex'] = index;
-                              });
-                            },
+                  ),
+                  new Wrap(
+                    spacing: 8.0, // gap between adjacent chips
+                    runSpacing: 0,
+                    children:
+                        pageRowData['specifications'].map<Widget>((Map map) {
+                      int index = pageRowData['specifications'].indexOf(map);
+                      return new Padding(
+                        padding: EdgeInsets.all(0),
+                        child: new FlatButton(
+                          color: pageRowData['selectSpecIndex'] == index
+                              ? Color.fromARGB(255, 200, 10, 10)
+                              : null,
+                          disabledColor: pageRowData['selectSpecIndex'] == index
+                              ? Color.fromARGB(255, 200, 10, 10)
+                              : null,
+                          child: Text(
+                            map['name'],
+                            style: TextStyle(
+                                color: pageRowData['selectSpecIndex'] == index
+                                    ? Colors.white
+                                    : Color.fromARGB(255, 200, 10, 10)),
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    new Container(
-                      width: 100.0,
-                      height: 40.0,
-                      margin: EdgeInsets.only(top: 20.0),
-                      child: new TextField(
-                        //文本输入控件
-                        onChanged: (String str) {
-                          //输入监听
-                          print('用户输入变更');
-                        },
-                        onSubmitted: (String str) {
-                          //提交监听
-                          print('用户提交变更');
-                        },
-                        keyboardType: TextInputType.number, //设置输入框文本类型
-                        controller: textEditingController, //控制器，控制文字内容
-                        textAlign: TextAlign.left, //设置内容显示位置是否居中等
-                        style: new TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Color.fromARGB(255, 200, 10, 10)),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              pageRowData['selectSpecIndex'] = index;
+                            });
+                          },
                         ),
-                        autofocus: false, //自动获取焦点
-                        decoration: new InputDecoration(
-                          labelText: '自定义秒数',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                      );
+                    }).toList(),
+                  ),
+                  new Container(
+                    width: 100.0,
+                    height: 40.0,
+                    margin: EdgeInsets.only(top: 20.0),
+                    child: new TextField(
+                      //文本输入控件
+                      onChanged: (String str) {
+                        //输入监听
+                        print('用户输入变更');
+                      },
+                      onSubmitted: (String str) {
+                        //提交监听
+                        print('用户提交变更');
+                      },
+                      keyboardType: TextInputType.number, //设置输入框文本类型
+                      controller: textEditingController, //控制器，控制文字内容
+                      textAlign: TextAlign.left, //设置内容显示位置是否居中等
+                      style: new TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.blueAccent,
+                      ),
+                      autofocus: false, //自动获取焦点
+                      decoration: new InputDecoration(
+                        labelText: '自定义秒数',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
 //                icon: new Container(
 //                  padding: EdgeInsets.all(0.0),
 //                  child: new Icon(Icons.phone),
 //                ),
 //                errorText: '这是错误的errorText',
-                          contentPadding: EdgeInsets.fromLTRB(
-                              10.0, 10.0, 10.0, 10.0), //设置显示文本的一个内边距
+                        contentPadding: EdgeInsets.fromLTRB(
+                            10.0, 10.0, 10.0, 10.0), //设置显示文本的一个内边距
 //                border: InputBorder.none,//取消默认的下划线边框
+                      ),
+                    ),
+                  ),
+                  new Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          '数量',
+                          style: TextStyle(fontSize: 20),
                         ),
-                      ),
-                    ),
-                    new Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            '数量',
-                            style: TextStyle(fontSize: 20),
+                        //数量选择器
+                        new Container(
+                          width: 120,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
                           ),
-                          //数量选择器
-                          new Container(
-                            width: 120,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                new InkWell(
-                                  child: new Container(
-                                    width: 40,
-                                    height: 40,
-                                    child: Icon(
-                                      Icons.remove,
-                                      size: 16,
-                                    ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              new InkWell(
+                                child: new Container(
+                                  width: 40,
+                                  height: 40,
+                                  child: Icon(
+                                    Icons.remove,
+                                    size: 16,
                                   ),
-                                  onTap: () {
-                                    if (pageRowData['quantity'] == 1) {
-                                      pageRowData['quantity'] = 1;
-                                      TsUtils.showShort("数量不能小于1");
-                                      return;
+                                ),
+                                onTap: () {
+                                  if (pageRowData['quantity'] == 1) {
+                                    pageRowData['quantity'] = 1;
+                                    TsUtils.showShort("数量不能小于1");
+                                    return;
+                                  }
+                                  int tempcount = --pageRowData['quantity'];
+                                  setState(() {
+                                    print("点击了减");
+                                    if (tempcount > 0) {
+                                      pageRowData['quantity'] = tempcount;
                                     }
-                                    int tempcount = --pageRowData['quantity'];
-                                    setState(() {
-                                      print("点击了减");
-                                      if (tempcount > 0) {
-                                        pageRowData['quantity'] = tempcount;
-                                      }
-                                    });
-                                  },
-                                ),
-                                Expanded(
-                                  child: new Container(
-                                    alignment: AlignmentDirectional.center,
-                                    child: Text(
-                                      pageRowData['quantity'].toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                    ),
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: new Container(
+                                  alignment: AlignmentDirectional.center,
+                                  child: Text(
+                                    pageRowData['quantity'].toString(),
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
                                   ),
                                 ),
-                                new InkWell(
-                                  child: new Container(
-                                    width: 40,
-                                    height: 40,
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 16,
-                                    ),
+                              ),
+                              new InkWell(
+                                child: new Container(
+                                  width: 40,
+                                  height: 40,
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 16,
                                   ),
-                                  onTap: () {
-                                    int tempcount = ++pageRowData['quantity'];
-                                    setState(() {
-                                      print("点击了加");
-                                      if (tempcount > 0) {
-                                        pageRowData['quantity'] = tempcount;
-                                      }
-                                    });
-                                  },
                                 ),
-                              ],
-                            ),
+                                onTap: () {
+                                  int tempcount = ++pageRowData['quantity'];
+                                  setState(() {
+                                    print("点击了加");
+                                    if (tempcount > 0) {
+                                      pageRowData['quantity'] = tempcount;
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            //弹出面板关闭按钮
-            new Positioned(
-              width: 30,
-              height: 30,
-              top: 8,
-              right: 8,
-              child: FloatingActionButton(
-                elevation: 0,
-                backgroundColor: Colors.black26,
-                child: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            //底部按钮组
-            new Positioned(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              bottom: 0,
-              child: new Row(
-                children: <Widget>[
-                  Expanded(
-                    child: FloatingActionButton(
-                      child: Text('确认预约'),
-                      shape: Border(),
-                      backgroundColor: Color.fromARGB(255, 230, 10, 10),
-                      onPressed: null,
-                    ),
-                  )
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          //弹出面板关闭按钮
+          new Positioned(
+            width: 30,
+            height: 30,
+            top: 8,
+            right: 8,
+            child: FloatingActionButton(
+              elevation: 0,
+              backgroundColor: Colors.black26,
+              child: Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          //底部按钮组
+          new Positioned(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            bottom: 0,
+            child: new Row(
+              children: <Widget>[
+                Expanded(
+                  child: FloatingActionButton(
+                    child: Text('确认预约'),
+                    shape: Border(),
+                    backgroundColor: Color.fromARGB(255, 230, 10, 10),
+                    onPressed: null,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
-      onTap: () {},
     );
-    return _body;
   }
 }
