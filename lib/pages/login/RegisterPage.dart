@@ -178,7 +178,9 @@ class _RegisterPageState extends State<RegisterPage> {
     return new Scaffold(
         resizeToAvoidBottomPadding: true,
         appBar: new AppBar(
-          title: widgetsUtils.getAppBar('登录'),
+          elevation: 0,
+          brightness: Brightness.dark,
+          // title: widgetsUtils.getAppBar('登录'),
           iconTheme: new IconThemeData(color: Colors.white),
         ),
         body: new SingleChildScrollView(
@@ -186,6 +188,26 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+
+              new ClipPath(
+               clipper: BottomClipper(),
+               child: new Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 252, 130, 45),
+                    image: DecorationImage(
+                      image: AssetImage('images/bg_login.png',),
+                      fit: BoxFit.cover,
+                      alignment: AlignmentDirectional.topCenter,
+                    ),
+                  ),
+                  height: 170,
+                  child: new Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Text('让生活更简单', style:TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
+                  ),
+                  width: widgetsUtils.screenWidth,
+                ),
+             ),
               _buildPhoneEdit(),
               _buildVerifyCodeEdit(),
               new Padding(
@@ -213,27 +235,28 @@ class _RegisterPageState extends State<RegisterPage> {
                 margin: new EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
                 padding: new EdgeInsets.fromLTRB(leftRightPadding,
                     topBottomPadding, leftRightPadding, topBottomPadding),
-                child: new Card(
-                  color: Colors.orange,
-                  elevation: 6.0,
-                  child: new FlatButton(
-                      onPressed: () {
-                        _postRegister(
+                child: new FlatButton(
+                    color: const Color.fromARGB(255, 252, 130, 45),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    onPressed: () {
+                      _postRegister(
                             _phoneController.text,
                             _userPassController.text,
                             _shareCodeController.text,
                             _verifyController.text
                         );
-                      },
-                      child: new Padding(
-                        padding: new EdgeInsets.all(10.0),
-                        child: new Text(
-                          '提交注册',
-                          style: new TextStyle(
-                              color: Colors.white, fontSize: 16.0),
-                        ),
-                      )),
-                ),
+                    },
+                    child: new Padding(
+                      padding: new EdgeInsets.all(10.0),
+                      child: new Text(
+                        '提交注册',
+                        style:
+                        new TextStyle(color: Colors.white, fontSize: 16.0),
+                      ),
+                    )),
               )
             ],
           ),
@@ -279,4 +302,21 @@ class _RegisterPageState extends State<RegisterPage> {
       TsUtils.showShort('请输入用户名和密码');
     }
   }
+}
+
+class BottomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height - 30);
+    path.lineTo(size.width, size.height);
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

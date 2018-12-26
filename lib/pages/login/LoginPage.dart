@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomPadding: true,
         appBar: new AppBar(
           elevation: 0,
+          brightness: Brightness.dark,
           // title: widgetsUtils.getAppBar('登录'),
           iconTheme: new IconThemeData(color: Colors.white),
         ),
@@ -50,14 +51,16 @@ class _LoginPageState extends State<LoginPage> {
                clipper: BottomClipper(),
                child: new Container(
                   decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 252, 130, 45),
                     image: DecorationImage(
-                      image: AssetImage('images/bg_login.jpg',),
-                      fit: BoxFit.fitWidth,
+                      image: AssetImage('images/bg_login.png',),
+                      fit: BoxFit.cover,
+                      alignment: AlignmentDirectional.topCenter,
                     ),
                   ),
-                  height: 240,
+                  height: 190,
                   child: new Padding(
-                    padding: EdgeInsets.only(top: 80),
+                    padding: EdgeInsets.only(top: 60),
                     child: Text('—— 约享 ——', style:TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
                   ),
                   width: widgetsUtils.screenWidth,

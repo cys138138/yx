@@ -51,6 +51,8 @@ class Consumption extends State<ConsumptionPage>
       length: 7,
       child: new Scaffold(
         appBar: new AppBar(
+          elevation: 0,
+          brightness: Brightness.dark,
           title: new Center(
             child: new Text("消费", style: new TextStyle(color: Colors.white)),
           ),

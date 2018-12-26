@@ -72,43 +72,43 @@ class _MyInfoPageState extends State<MyInfoPage> {
         Widget>[
       new SliverAppBar(
         pinned: false,
-        backgroundColor: Color.fromARGB(255, 249, 109, 43),
-        expandedHeight: 200.0,
+        backgroundColor: Colors.transparent,
+        brightness: Brightness.dark,
+        expandedHeight: 250.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: new InkWell(
             onTap: () {
               userAvatar == null ? _login() : _userDetail();
             },
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                userAvatar == null
-                    ? new Image.asset(
-                        "images/ic_avatar_default.png",
-                        width: 60.0,
-                        height: 60.0,
-                      )
-                    : new Container(
-                        width: 60.0,
-                        height: 60.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.transparent,
-                            image: new DecorationImage(
-                                image: new NetworkImage(userAvatar),
-                                fit: BoxFit.cover),
-                            border: new Border.all(
-                                color: Colors.white, width: 2.0)),
-                      ),
-                new Container(
-                  margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                  child: new Text(
-                    userName == null ? '点击头像登录' : userName,
-                    style: new TextStyle(color: Colors.white, fontSize: 16.0),
+            child: ClipPath(
+              clipper: BottomClipper(),
+              child: new Container(
+                padding: EdgeInsets.only(top: 45),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 252, 130, 45),
+                  image: DecorationImage(
+                    image: AssetImage('images/bg_mine.png',),
+                    fit: BoxFit.cover,
+                    alignment: AlignmentDirectional.topCenter,
                   ),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25))
                 ),
-              ],
-            )),
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new CircleAvatar(backgroundImage: userAvatar == null ? new AssetImage('images/ic_avatar_default.png') : new NetworkImage(userAvatar), radius: 50),
+                    new Container(
+                      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      child: new Text(
+                        userName == null ? '点击头像登录' : userName,
+                        style: new TextStyle(color: Colors.white, fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
+          )
       ),
       new SliverFixedExtentList(
           delegate:
@@ -204,4 +204,29 @@ class _MyInfoPageState extends State<MyInfoPage> {
     });
 
   }
+}
+
+class BottomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height - 20);
+    var firstControlPoint = Offset(size.width / 5, size.height);
+    var firstPoint = Offset(size.width / 2, size.height);
+    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
+        firstPoint.dx, firstPoint.dy);
+
+    var secondControlPoint = Offset(size.width - (size.width / 5), size.height);
+    var secondPoint = Offset(size.width, size.height - 20);
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondPoint.dx, secondPoint.dy);
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
