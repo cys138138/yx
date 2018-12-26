@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
@@ -5,6 +7,8 @@ import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:yx/utils/net/YxApi.dart';
+import 'package:yx/utils/net/YxHttp.dart';
 
 class MyInfoPage extends StatefulWidget {
   @override
@@ -35,12 +39,15 @@ class _MyInfoPageState extends State<MyInfoPage> {
     height: ARROW_ICON_WIDTH,
   );
 
+  Map<String,dynamic> _userDataInfo;
+
   @override
   void initState() {
     super.initState();
 
 //    SpUtils.cleanUserInfo();
     _getUserInfo();
+    _getInitData();
     OsApplication.eventBus.on<LoginEvent>().listen((event) {
       setState(() {
         if (event != null && event.userName != null) {
@@ -99,7 +106,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     userName == null ? '点击头像登录' : userName,
                     style: new TextStyle(color: Colors.white, fontSize: 16.0),
                   ),
-                )
+                ),
               ],
             )),
       ),
@@ -162,6 +169,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   _getUserInfo() async {
     SpUtils.getUserInfo().then((userInfoBean) {
+      if(userInfoBean.id == null){
+        return _login();
+      }
+
       if (userInfoBean != null && userInfoBean.username != null) {
         setState(() {
           userName = userInfoBean.username;
@@ -169,5 +180,28 @@ class _MyInfoPageState extends State<MyInfoPage> {
         });
       }
     });
+  }
+
+  void _getInitData() {
+    SpUtils.getUserInfo().then((userInfoBean) {
+      if(userInfoBean !=null && userInfoBean.id != null){
+        print('authorization Token '+userInfoBean.token);
+        YxHttp.get(YxApi.GET_MY_HOME_DATA+userInfoBean.id,headers: {
+          'authorization': 'Token '+userInfoBean.token
+        }).then((res){
+          try {
+            Map<String,dynamic> data = jsonDecode(res);
+            setState(() {
+              _userDataInfo = data['content'];
+            });
+          } catch (e) {
+            print('错误catch s $e');
+          }
+        });
+      }
+
+
+    });
+
   }
 }

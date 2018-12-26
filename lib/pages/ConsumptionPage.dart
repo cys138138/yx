@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:yx/pages/star/Detail.dart';
 import 'package:yx/pages/star/YxStarDetailPage.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
