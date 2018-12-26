@@ -61,7 +61,7 @@ class YxHttp {
   }
 
   static Map<String, dynamic> _dealWithRes(var res, {bool saveCookie}) {
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 || res.statusCode == 201) {
       var cookie = res.headers['set-cookie'];
       if (saveCookie) {
         SpUtils.saveCookie(cookie);
