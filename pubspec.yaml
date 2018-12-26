@@ -85,6 +85,7 @@ flutter:
      - images/ic_xiaoxin.jpg
      - images/ic_set.png
      - images/ic_about.png
+     - images/bg_login.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

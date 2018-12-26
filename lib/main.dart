@@ -125,7 +125,9 @@ class MyMainState extends State<MyApp> {
   Widget build(BuildContext context) {
     initData();
     return new MaterialApp(
-      theme: new ThemeData(primaryColor: const Color.fromARGB(255, 252, 130, 45)),
+      theme: new ThemeData(
+        primaryColor: const Color.fromARGB(255, 252, 130, 45),
+      ),
 //      routes: _routes,
       home: new Scaffold(
 //          appBar: new AppBar(

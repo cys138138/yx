@@ -61,6 +61,7 @@ class NewsListPageState extends State<IndexPage> {
 
         return new Scaffold(
           appBar: new AppBar(
+            brightness: Brightness.dark,
             title: new Center(
               child: new Text("约享", style: new TextStyle(color: Colors.white)),
             ),

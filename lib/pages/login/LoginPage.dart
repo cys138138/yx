@@ -36,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
     return new Scaffold(
       resizeToAvoidBottomPadding: true,
         appBar: new AppBar(
-          title: widgetsUtils.getAppBar('登录'),
+          elevation: 0,
+          // title: widgetsUtils.getAppBar('登录'),
           iconTheme: new IconThemeData(color: Colors.white),
         ),
         body:
@@ -45,13 +46,23 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-//              new Container(
-//                child: new Image.asset(
-//                  LOGO,
-//                  fit: BoxFit.fitWidth,
-//                ),
-//                width: widgetsUtils.screenWidth,
-//              ),
+             new ClipPath(
+               clipper: BottomClipper(),
+               child: new Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/bg_login.jpg',),
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  height: 240,
+                  child: new Padding(
+                    padding: EdgeInsets.only(top: 80),
+                    child: Text('—— 约享 ——', style:TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
+                  ),
+                  width: widgetsUtils.screenWidth,
+                ),
+             ),
               new Padding(
                 padding: new EdgeInsets.fromLTRB(
                     leftRightPadding, 40.0, leftRightPadding, topBottomPadding),
@@ -91,23 +102,24 @@ class _LoginPageState extends State<LoginPage> {
                 margin: new EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
                 padding: new EdgeInsets.fromLTRB(leftRightPadding,
                     topBottomPadding, leftRightPadding, topBottomPadding),
-                child: new Card(
-                  color: Colors.orange,
-                  elevation: 6.0,
                   child: new FlatButton(
-                      onPressed: () {
-                        _postLogin(
-                            _userNameController.text, _userPassController.text);
-                      },
-                      child: new Padding(
-                        padding: new EdgeInsets.all(10.0),
-                        child: new Text(
-                          '马上登录',
-                          style:
-                          new TextStyle(color: Colors.white, fontSize: 16.0),
-                        ),
-                      )),
-                ),
+                    color: const Color.fromARGB(255, 252, 130, 45),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    onPressed: () {
+                      _postLogin(
+                          _userNameController.text, _userPassController.text);
+                    },
+                    child: new Padding(
+                      padding: new EdgeInsets.all(10.0),
+                      child: new Text(
+                        '马上登录',
+                        style:
+                        new TextStyle(color: Colors.white, fontSize: 16.0),
+                      ),
+                    )),
               )
             ],
           )
@@ -140,4 +152,29 @@ class _LoginPageState extends State<LoginPage> {
       TsUtils.showShort('请输入用户名和密码');
     }
   }
+}
+
+class BottomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height - 20);
+
+    int doble = 12; int cdy = 40;
+    for(var i = 1; i <= (doble / 2); i++){
+      if(i.isOdd){
+        path.quadraticBezierTo(size.width / doble * (2 * i - 1) - (size.width / (doble *3)), size.height - cdy, size.width / doble * 2 * i, size.height - 20);
+      }else{
+        path.quadraticBezierTo(size.width / doble * (2 * i - 1) + (size.width / (doble *3)), size.height, size.width / doble * 2 * i, size.height - 20);
+      }
+    }
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
