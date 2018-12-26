@@ -52,7 +52,7 @@ class YxHttp {
     if (params == null) {
       params = new Map();
     }
-    String _url = Api.BASE_URL + url;
+    String _url = YxApi.BASE_URL + url;
     if (OsApplication.cookie != null) {
       params['Cookie'] = OsApplication.cookie;
     }
@@ -67,17 +67,15 @@ class YxHttp {
         SpUtils.saveCookie(cookie);
         OsApplication.cookie = cookie;
       }
-      String body = res.body;
+
+
+      Utf8Decoder decode = new Utf8Decoder();
+      String body = decode.convert(res.bodyBytes);
       var jsonStr = json.decode(body);
+      dynamic data = jsonStr;
+
       print('the jsonStr is $jsonStr');
-      int errCode = jsonStr['errorCode'];
-      if (errCode == 0) {
-        var data = jsonStr['data'];
-        return data;
-      } else {
-        TsUtils.showShort(jsonStr['errorMsg']);
-        return null;
-      }
+      return data;
     } else {
       TsUtils.showShort('您的网络好像不太好哟~~~///(^v^)\\\~~~');
       return null;

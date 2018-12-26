@@ -2,9 +2,10 @@ class UserInfoBean{
 
   var id;
   var username;
-  var email;
+  var token;
   var url;
+  var sys_id;
 
-  UserInfoBean(this.id, this.username, this.email);
+  UserInfoBean(this.id, this.username, this.token,this.sys_id);
 
 }

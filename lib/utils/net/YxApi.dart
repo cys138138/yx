@@ -24,10 +24,13 @@ class YxApi {
           REDIRECT_URL;
 
 // 用户注册接口
-  static final String USER_REGISTER = 'user/register';
+  static final String USER_REGISTER = 'api/user/register/';
 
 //  用户登录接口
-  static final String USER_LOGIN = 'user/login';
+  static final String USER_LOGIN = 'api/user/auth/';
+
+  //获取验证码接口
+  static final String GET_SMS = 'api/user/sms/?mobile=';
 
 
 //  banner接口

@@ -38,6 +38,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
   @override
   void initState() {
     super.initState();
+
+//    SpUtils.cleanUserInfo();
     _getUserInfo();
     OsApplication.eventBus.on<LoginEvent>().listen((event) {
       setState(() {

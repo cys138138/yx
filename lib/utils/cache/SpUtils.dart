@@ -6,7 +6,8 @@ import 'dart:async';
 class SpUtils {
   static const SP_ID = 'sp_id';
   static const SP_NAME = 'sp_name';
-  static const SP_EMAIL = 'sp_email';
+  static const SP_TOKEN = 'sp_token';
+  static const SP_SYS_ID = 'sp_sys_id';
 
   static const SP_TOKEN_TYPE = 'sp_token_type';
   static const SP_EXPIRES_IN = 'sp_expires_in';
@@ -20,7 +21,8 @@ class SpUtils {
           await SharedPreferences.getInstance();
       sharedPreferences.setString(SP_ID, userInfo.id.toString());
       sharedPreferences.setString(SP_NAME, userInfo.username);
-      sharedPreferences.setString(SP_EMAIL, userInfo.email);
+      sharedPreferences.setString(SP_TOKEN, userInfo.token);
+      sharedPreferences.setString(SP_SYS_ID, userInfo.sys_id);
     }
   }
 
@@ -29,7 +31,8 @@ class SpUtils {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(SP_ID, null);
     sharedPreferences.setString(SP_NAME, null);
-    sharedPreferences.setString(SP_EMAIL, null);
+    sharedPreferences.setString(SP_TOKEN, null);
+    sharedPreferences.setString(SP_SYS_ID, null);
     saveCookie(null);
     OsApplication.cookie=null;
   }
@@ -39,18 +42,21 @@ class SpUtils {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getString(SP_ID);
     var name = sharedPreferences.getString(SP_NAME);
-    var email = sharedPreferences.getString(SP_EMAIL);
-    UserInfoBean userInfoBean = new UserInfoBean(id, name, email);
+    var token = sharedPreferences.getString(SP_TOKEN);
+    var sys_id = sharedPreferences.getString(SP_SYS_ID);
+    UserInfoBean userInfoBean = new UserInfoBean(id, name, token,sys_id);
     return userInfoBean;
   }
 
 //  把map转为UserInfoBean
   static Future<UserInfoBean> map2UserInfo(Map map) async {
+    print(map);
     if (map != null) {
-      var id = map['id'];
-      var name = map['username'];
-      var email = map['email'];
-      UserInfoBean userInfoBean = new UserInfoBean(id, name, email);
+      var id = map['user_id'];
+      var name = map['nickname'];
+      var token = map['token'];
+      var sys_id = map['sys_id'];
+      UserInfoBean userInfoBean = new UserInfoBean(id, name, token,sys_id);
       return userInfoBean;
     } else {
       return null;
