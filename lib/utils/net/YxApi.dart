@@ -35,6 +35,8 @@ class YxApi {
 
   static final String GET_MY_HOME_DATA = 'api/user/myhome/';
 
+  static final String GET_PRODUCT_LIST = 'api/product/productlist/';
+
 
 //  banner接口
   static final String HOME_BANNER = 'api/news/banners/';

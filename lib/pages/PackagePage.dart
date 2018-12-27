@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yx/utils/net/YxApi.dart';
+import 'package:yx/utils/net/YxHttp.dart';
 
 class PackagePage extends StatefulWidget {
   @override
@@ -19,6 +23,23 @@ class Package extends State<PackagePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget _body;
+    if (packageList.length == 0) {
+      _body = new Center(
+        child: new CircularProgressIndicator(
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      _body = Container(
+        padding: EdgeInsets.all(15.0),
+        child: ListView.builder(
+          itemBuilder: (context, index) => rendRow(index),
+          itemCount: packageList.length,
+        ),
+      );
+    }
+
     // TODO: implement build
     return new Scaffold(
       appBar: new AppBar(
@@ -29,27 +50,37 @@ class Package extends State<PackagePage> {
         ),
         iconTheme: new IconThemeData(color: Colors.white),
       ),
-      body: Container(
-        padding: EdgeInsets.all(15.0),
-        child: ListView.builder(
-          itemBuilder: (context, index) => rendRow(index),
-          itemCount: packageList.length,
-        ),
-      ),
+      body: _body,
     );
   }
 
   void getPackageList() {
-    List<Map<String,dynamic>> _list = [];
-    for (int i=0;i<10;i++){
-      Map<String,dynamic> _map = {
-        "title":((i+1) * 100).toString() + "秒套餐",
-        'sub_title':"用于消费" + ((i+1) * 100).toString() + "秒的套餐",
-        "money":((i+1) * 100 - 1).toString() ,
-      };
-      _list.add(_map);
-    }
-    packageList = _list;
+    YxHttp.get(YxApi.GET_PRODUCT_LIST).then((res) {
+      try {
+        List<Map<String,dynamic>> _list = [];
+        Map<String, dynamic> map = jsonDecode(res);
+        var data = map['content']['products'];
+        for (int i = 0; i < data.length; i++) {
+          var mapItem = data[i];
+          _list.add({
+            "url": "",
+            "id": mapItem["id"],
+            "title": mapItem['name'],
+            "sub_title": mapItem['desc'],
+            'money': mapItem['price'],
+          });
+        }
+
+        Future.delayed(new Duration(milliseconds: 500),(){
+          setState(() {
+            packageList = _list;
+          });
+        });
+
+      } catch (e) {
+        print('错误catch s $e');
+      }
+    });
   }
 
   Widget rendRow(i) {

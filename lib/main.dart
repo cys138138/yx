@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:yx/pages/ConsumptionPage.dart';
 import 'package:yx/pages/IndexPage.dart';
 import 'package:yx/pages/PackagePage.dart';
-import 'package:yx/pages/SystemPage.dart';
 import 'package:yx/utils/net/ParamsUtils.dart';
-import 'pages/NewsListPage.dart';
-import 'pages/DiscoveryPage.dart';
 import 'pages/MyInfoPage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:yx/widgets/LeftDraw.dart';
 import 'package:flutter/rendering.dart';
 
 //首页
