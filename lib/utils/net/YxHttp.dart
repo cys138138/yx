@@ -11,9 +11,12 @@ import 'package:yx/utils/cache/SpUtils.dart';
 class YxHttp {
 //  get 请求
   static Future<dynamic> get(String url,
-      {Map<String, String> params, bool saveCookie = false}) async {
+      {Map<String, String> params, bool saveCookie = false,Map<String, String> headers}) async {
     if (params == null) {
       params = new Map();
+    }
+    if (headers == null) {
+      headers = new Map();
     }
     String _url = YxApi.BASE_URL + url;
     if (params != null && params.isNotEmpty) {
@@ -28,7 +31,7 @@ class YxHttp {
     }
     print('url是$url');
     print('完整url是$_url');
-    http.Response res = await http.get(_url);
+    http.Response res = await http.get(_url,headers: headers);
     if (res.statusCode == 200) {
       var cookie = res.headers['set-cookie'];
       if (saveCookie) {

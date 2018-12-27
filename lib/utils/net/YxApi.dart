@@ -33,6 +33,9 @@ class YxApi {
   static final String GET_SMS = 'api/user/sms/?mobile=';
 
 
+  static final String GET_MY_HOME_DATA = 'api/user/myhome/';
+
+
 //  banner接口
   static final String HOME_BANNER = 'api/news/banners/';
 
