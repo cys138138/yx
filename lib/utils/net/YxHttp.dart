@@ -44,7 +44,12 @@ class YxHttp {
       dynamic data = jsonStr;
       print('the data of method is $data');
       return body;
-    } else {
+    }else if(res.statusCode == 401){
+      SpUtils.cleanUserInfo();
+      TsUtils.showShort('登录失效请重新登录');
+    }
+
+    else {
       TsUtils.showShort('您的网络好像不太好哟~~~///(^v^)\\\~~~');
     }
   }
