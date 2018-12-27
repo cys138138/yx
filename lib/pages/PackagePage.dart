@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yx/domain/PackageClassBean.dart';
+import 'package:yx/pages/order/OrderDetailPage.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
@@ -13,7 +15,7 @@ class PackagePage extends StatefulWidget {
 }
 
 class Package extends State<PackagePage> {
-  var packageList = [];
+  List<PackageClassBean> packageList = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -57,18 +59,23 @@ class Package extends State<PackagePage> {
   void getPackageList() {
     YxHttp.get(YxApi.GET_PRODUCT_LIST).then((res) {
       try {
-        List<Map<String,dynamic>> _list = [];
+        List<PackageClassBean> _list = [];
         Map<String, dynamic> map = jsonDecode(res);
         var data = map['content']['products'];
         for (int i = 0; i < data.length; i++) {
           var mapItem = data[i];
-          _list.add({
-            "url": "",
-            "id": mapItem["id"],
-            "title": mapItem['name'],
-            "sub_title": mapItem['desc'],
-            'money': mapItem['price'],
-          });
+          _list.add(PackageClassBean(
+            mapItem["id"],
+            mapItem["content"],
+            mapItem["name"],
+            mapItem["img_url"],
+            mapItem["desc"],
+            mapItem["price"],
+            mapItem["quantity"],
+            mapItem["seconds"],
+            mapItem["reminds"],
+            mapItem["create_at"],
+          ));
         }
 
         Future.delayed(new Duration(milliseconds: 500),(){
@@ -91,6 +98,7 @@ class Package extends State<PackagePage> {
         InkWell(
           onTap: () {
             print("this is p $i");
+            _tapRow(itemMap);
           },
           child: new Container(
             height: 170.0,
@@ -112,7 +120,7 @@ class Package extends State<PackagePage> {
                       flex: 2,
                       child: new Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text(itemMap["title"], style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.start,),
+                        child: Text(itemMap.name, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.start,),
                       ),
                     ),
                     new Expanded(
@@ -120,7 +128,7 @@ class Package extends State<PackagePage> {
                       child: new Padding(
                         padding: EdgeInsets.all(15),
                         child: new Center(
-                          child: Text('¥' + itemMap["money"], style: TextStyle(color: Colors.white, fontSize: 38), textAlign: TextAlign.center,),
+                          child: Text('¥' + itemMap.price, style: TextStyle(color: Colors.white, fontSize: 38), textAlign: TextAlign.center,),
                         )
                       ),
                     ),
@@ -141,7 +149,7 @@ class Package extends State<PackagePage> {
                       child: new Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(itemMap["sub_title"], style: TextStyle(color: Colors.black54),),
+                          Text(itemMap.desc, style: TextStyle(color: Colors.black54),),
                           FlatButton(
                             child: Text('立即购买>>', style: TextStyle(color: Color.fromARGB(255, 252, 130, 45),),),
                             onPressed: (){},
@@ -158,6 +166,12 @@ class Package extends State<PackagePage> {
         new Divider(height: 28, color: Colors.grey[200],),
       ],
     );
+  }
+
+  void _tapRow(item) {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new OrderDetailPage(item);
+    }));
   }
 }
 
