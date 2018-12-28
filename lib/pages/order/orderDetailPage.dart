@@ -59,16 +59,16 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                         child: new Column(
                           children: <Widget>[
                             new Text(
-                              "预约秒数",
+                              "套餐金额",
                               style: new TextStyle(
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey),
                             ),
                             new Text(
-                              packageItem.seconds + "秒起",
+                              "¥"+packageItem.price,
                               style: new TextStyle(
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
@@ -115,7 +115,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
           children: <Widget>[
             new Container(
               margin: EdgeInsets.only(top: 50.0,bottom: 30.0),
-              height: 220.0,
+              height: 250.0,
               child:
               new Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +125,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                       print("this is p");
                     },
                     child: new Container(
-                      height: 170.0,
+                      height: 200.0,
                       decoration: new BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
                         color: const Color.fromARGB(255, 252, 130, 45),
@@ -143,8 +143,8 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                               new Expanded(
                                 flex: 2,
                                 child: new Padding(
-                                  padding: EdgeInsets.all(15),
-                                  child: Text(packageItem.name, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.start,),
+                                  padding: EdgeInsets.all(25),
+                                  child: Text(packageItem.name, style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
                                 ),
                               ),
                               new Expanded(
@@ -152,7 +152,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                                 child: new Padding(
                                     padding: EdgeInsets.all(15),
                                     child: new Center(
-                                      child: Text('¥' + packageItem.price, style: TextStyle(color: Colors.white, fontSize: 38), textAlign: TextAlign.center,),
+                                      child: Text('¥' + packageItem.price, style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,),
                                     )
                                 ),
                               ),
@@ -160,7 +160,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                           ),
                           new Positioned(
                             width: MediaQuery.of(context).size.width,
-                            height: 40,
+                            height: 60,
                             bottom: 0,
                             child: new ClipPath(
                               clipper: BottomClipper("top"),
@@ -173,7 +173,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                                 child: new Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text(packageItem.desc, style: TextStyle(color: Colors.black54),),
+                                    Text(packageItem.desc, style: TextStyle(color: Colors.black54,fontSize: 18.0),),
                                   ],
                                 ),
                               ),
@@ -181,15 +181,15 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                           ),
                           new Positioned(
                             width: MediaQuery.of(context).size.width,
-                            height: 0,
-                            top: 0,
+                            height: 10,
+                            top: -1,
                             child: new ClipPath(
                               clipper: BottomClipper("buttom"),
                               child: new Container(
                                 padding: EdgeInsets.only(left: 15, top: 6),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4))
+//                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4))
                                 ),
                               ),
                             ),
@@ -205,11 +205,11 @@ class _NewsDetailPageState extends State<OrderDetailPage>
             new Container(
               height: 60.0,
               child: new Padding(
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(10.0),
                 child: new Align(
                     alignment: Alignment.centerLeft,
                     child: new Text(
-                      packageItem.name,
+                      "套餐权益",
                       style: new TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     )),
@@ -217,29 +217,28 @@ class _NewsDetailPageState extends State<OrderDetailPage>
             ),
             new Container(
               child: new Padding(
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(10.0),
                 child: new Align(
                     alignment: Alignment.centerLeft,
                     child: new Text(
-                      packageItem.desc,
-                      style: new TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey),
-                    )),
-              ),
-            ),
-            new Container(
-              child: new Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Align(
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      packageItem.seconds + "秒起",
+                      packageItem.seconds,
                       style: new TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.orange),
+                    )),
+              ),
+            ),
+            new Container(
+              height: 60.0,
+              child: new Padding(
+                padding: EdgeInsets.all(10.0),
+                child: new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      "注意事项",
+                      style: new TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
                     )),
               ),
             ),
@@ -249,7 +248,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                 child: new Align(
                     alignment: Alignment.centerLeft,
                     child: new Text(
-                      packageItem.desc,
+                      packageItem.reminds,
                       style: new TextStyle(
                           fontSize: 13.0, fontWeight: FontWeight.normal),
                     )),
@@ -299,6 +298,9 @@ class _NewsDetailPageState extends State<OrderDetailPage>
           headerSliverBuilder: _sliverBuilder,
           body: new Container(
             child: toboxAdapter,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -561,12 +563,22 @@ class BottomClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    if(true||position.contains("buttom")){
-      path.lineTo(0.0, 6);
-    }else{
-      path.lineTo(0.0, 6);
-    }
+    if(position.contains("buttom")){
+      path.moveTo(0.0, 0.0);
+      path.lineTo(10, 0.0);
+      int doble = 72;
+      for(var i = 1; i <= (doble / 2); i++){
+        path.lineTo(size.width / doble * ((4 * (i - 1)) + 1), 0);
+        path.quadraticBezierTo(size.width / doble * (2 * (2 * i - 1)), 10, size.width / doble * (4 * i - 1), 0);
+        path.lineTo(size.width / doble * (4 * i), 0);
+      }
+      path.lineTo(size.width, 0);
+      path.close();
 
+      return path;
+
+    }
+    path.lineTo(0.0, 6);
     int doble = 80;
     for(var i = 1; i <= (doble / 2); i++){
       path.lineTo(size.width / doble * ((4 * (i - 1)) + 1), 6);
