@@ -56,15 +56,18 @@ class YxHttp {
 
 //  post请求
   static Future<Map> post(String url,
-      {Map<String, String> params, bool saveCookie = false}) async {
+      {Map<String, String> params, bool saveCookie = false,Map<String, String> headers}) async {
     if (params == null) {
       params = new Map();
+    }
+    if (headers == null) {
+      headers = new Map();
     }
     String _url = YxApi.BASE_URL + url;
     if (OsApplication.cookie != null) {
       params['Cookie'] = OsApplication.cookie;
     }
-    http.Response res = await http.post(_url, body: params);
+    http.Response res = await http.post(_url, body: params,headers: headers);
     return _dealWithRes(res, saveCookie: saveCookie);
   }
 

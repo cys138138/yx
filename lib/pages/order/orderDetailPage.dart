@@ -1,11 +1,20 @@
 import 'dart:convert';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/PackageClassBean.dart';
+import 'package:yx/domain/event/GoPageEvent.dart';
+import 'package:yx/domain/event/LoginEvent.dart';
+import 'package:yx/pages/IndexPage.dart';
+import 'package:yx/pages/MyInfoPage.dart';
+import 'package:yx/pages/login/LoginPage.dart';
+import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
+
 
 class OrderDetailPage extends StatefulWidget {
   String _url, _title, _id;
@@ -26,7 +35,30 @@ class _NewsDetailPageState extends State<OrderDetailPage>
   @override
   void initState() {
     super.initState();
+    OsApplication.eventBus.on<GoPageEvent>().listen((event) {
+      try{
+        Navigator.of(context).pop();
+        setState(() {
+          SpUtils.cleanUserInfo();
+        });
+        Navigator.of(context)
+            .push(new MaterialPageRoute(builder: (context) {
+              if(event.pageName == 'LoginPage'){
+                return new LoginPage();
+              }
+              if(event.pageName == 'MyInfoPage'){
+                return new IndexPage();
+              }
+
+        }));
+      }catch(e){
+
+      }
+    });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +121,13 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                     padding: EdgeInsets.only(left: 15, right: 15),
                     child: FlatButton(
                       child: Text(
-                        '立即预约',
+                        '立即购买',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         Scaffold.of(context).showBottomSheet(
                               (BuildContext context) {
-                            return ModalBottomSheet();
+                            return ModalBottomSheet(packageItem);
                           },
                         );
                       },
@@ -226,7 +258,8 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.orange),
-                    )),
+                    )
+                ),
               ),
             ),
             new Container(
@@ -277,7 +310,7 @@ class _NewsDetailPageState extends State<OrderDetailPage>
           backgroundColor: const Color.fromARGB(255, 252, 130, 45),
           flexibleSpace: FlexibleSpaceBar(
             centerTitle: true,
-             title: new Text("套餐", style: new TextStyle(color: Colors.white)),
+             title: new Text("约享套餐", style: new TextStyle(color: Colors.white)),
             background: null,
           ),
           leading: IconButton(
@@ -309,31 +342,28 @@ class _NewsDetailPageState extends State<OrderDetailPage>
 }
 
 class ModalBottomSheet extends StatefulWidget {
-  _ModalBottomSheetState createState() => _ModalBottomSheetState();
+  PackageClassBean packageItem;
+
+  ModalBottomSheet(this.packageItem);
+
+  _ModalBottomSheetState createState() => _ModalBottomSheetState(packageItem);
 }
 
 class _ModalBottomSheetState extends State<ModalBottomSheet>
     with SingleTickerProviderStateMixin {
-  Map pageRowData = {
-    'specifications': <Map>[
-      {'id': 1, 'name': '3000秒'},
-      {'id': 2, 'name': '5000秒'},
-      {'id': 3, 'name': '10000秒'},
-      {'id': 4, 'name': '15000秒'},
-    ],
-    'selectSpecIndex': 0,
-    'quantity': 1,
-  };
+
   int totalNums = 0;
 
   TextEditingController textEditingController = new TextEditingController();
 
+  PackageClassBean packageItem;
+
   Widget build(BuildContext context) {
     return new Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
+      height: 200.0,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white24,
         border: Border(top: BorderSide(color: Colors.grey[300])),
       ),
       child: Stack(
@@ -349,168 +379,36 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
                 children: <Widget>[
                   //产品规格
                   new Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 8),
-                    child: Text(
-                      '秒数规格',
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    child: Center(child: Text(
+                      '确认购买',
+                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                    )),
                   ),
-                  new Wrap(
-                    spacing: 8.0, // gap between adjacent chips
-                    runSpacing: 0,
-                    children:
-                        pageRowData['specifications'].map<Widget>((Map map) {
-                      int index = pageRowData['specifications'].indexOf(map);
-                      return new Padding(
-                        padding: EdgeInsets.all(0),
-                        child: new FlatButton(
-                          color: pageRowData['selectSpecIndex'] == index
-                              ? Color.fromARGB(255, 200, 10, 10)
-                              : null,
-                          disabledColor: pageRowData['selectSpecIndex'] == index
-                              ? Color.fromARGB(255, 200, 10, 10)
-                              : null,
-                          child: Text(
-                            map['name'],
-                            style: TextStyle(
-                                color: pageRowData['selectSpecIndex'] == index
-                                    ? Colors.white
-                                    : Color.fromARGB(255, 200, 10, 10)),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 200, 10, 10)),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              pageRowData['selectSpecIndex'] = index;
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                  new Divider(height: 0.5, color: Colors.grey,),
                   new Container(
-                    width: 100.0,
-                    height: 40.0,
                     margin: EdgeInsets.only(top: 20.0),
-                    child: new TextField(
-                      //文本输入控件
-                      onChanged: (String str) {
-                        //输入监听
-                        print('用户输入变更');
-                      },
-                      onSubmitted: (String str) {
-                        //提交监听
-                        print('用户提交变更');
-                      },
-                      keyboardType: TextInputType.number, //设置输入框文本类型
-                      controller: textEditingController, //控制器，控制文字内容
-                      textAlign: TextAlign.left, //设置内容显示位置是否居中等
-                      style: new TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.blueAccent,
-                      ),
-                      autofocus: false, //自动获取焦点
-                      decoration: new InputDecoration(
-                        labelText: '自定义秒数',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-//                icon: new Container(
-//                  padding: EdgeInsets.all(0.0),
-//                  child: new Icon(Icons.phone),
-//                ),
-//                errorText: '这是错误的errorText',
-                        contentPadding: EdgeInsets.fromLTRB(
-                            10.0, 10.0, 10.0, 10.0), //设置显示文本的一个内边距
-//                border: InputBorder.none,//取消默认的下划线边框
-                      ),
-                    ),
-                  ),
-                  new Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    child: Column(
                       children: <Widget>[
-                        Text(
-                          '数量',
-                          style: TextStyle(fontSize: 20),
+                        new Center(
+                          child: Text(packageItem.name, style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
                         ),
-                        //数量选择器
-                        new Container(
-                          width: 120,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              new InkWell(
-                                child: new Container(
-                                  width: 40,
-                                  height: 40,
-                                  child: Icon(
-                                    Icons.remove,
-                                    size: 16,
-                                  ),
-                                ),
-                                onTap: () {
-                                  if (pageRowData['quantity'] == 1) {
-                                    pageRowData['quantity'] = 1;
-                                    TsUtils.showShort("数量不能小于1");
-                                    return;
-                                  }
-                                  int tempcount = --pageRowData['quantity'];
-                                  setState(() {
-                                    print("点击了减");
-                                    if (tempcount > 0) {
-                                      pageRowData['quantity'] = tempcount;
-                                    }
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: new Container(
-                                  alignment: AlignmentDirectional.center,
-                                  child: Text(
-                                    pageRowData['quantity'].toString(),
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                  ),
-                                ),
-                              ),
-                              new InkWell(
-                                child: new Container(
-                                  width: 40,
-                                  height: 40,
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 16,
-                                  ),
-                                ),
-                                onTap: () {
-                                  int tempcount = ++pageRowData['quantity'];
-                                  setState(() {
-                                    print("点击了加");
-                                    if (tempcount > 0) {
-                                      pageRowData['quantity'] = tempcount;
-                                    }
-                                  });
-                                },
-                              ),
-                            ],
+                        new Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                          child: new Center(
+                              child: new Text(
+                                '¥' + packageItem.price,
+                                style: new TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange),
+                              )
                           ),
                         ),
+
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -539,10 +437,44 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
               children: <Widget>[
                 Expanded(
                   child: FloatingActionButton(
-                    child: Text('确认预约'),
+                    child: Text('确认购买'),
                     shape: Border(),
-                    backgroundColor: Color.fromARGB(255, 230, 10, 10),
-                    onPressed: null,
+                    backgroundColor: Colors.orange,
+                    onPressed: (){
+                      Navigator.of(context)
+                          .push(new MaterialPageRoute(builder: (context) {
+                        return new IndexPage();
+
+                      }));
+
+//                      OsApplication.eventBus.fire(new GoPageEvent('MyInfoPage'));
+                      return;
+
+                      SpUtils.getUserInfo().then((userInfoBean) {
+                        if(userInfoBean.id == null){
+                            OsApplication.eventBus.fire(new GoPageEvent('LoginPage'));
+                            return;
+                        }
+                        YxHttp.post(YxApi.BUY_PRODUCT+packageItem.id+"/purchase/",headers: {
+                          'authorization': 'Token '+userInfoBean.token
+                        }).then((res){
+                          TsUtils.showShort(res["desc"]);
+                          if(res["errors"].length > 0){
+
+                          }else{
+                            Future.delayed(Duration(seconds: 2),(){
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+                                return MyInfoPage();
+                              }));
+                            });
+                          }
+                        });
+
+                      });
+
+
+
+                    },
                   ),
                 )
               ],
@@ -552,6 +484,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
       ),
     );
   }
+  _ModalBottomSheetState(this.packageItem);
 }
 
 
