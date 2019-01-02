@@ -78,39 +78,135 @@ class _MyInfoPageState extends State<MyInfoPage> {
         pinned: false,
         backgroundColor: Colors.transparent,
         brightness: Brightness.dark,
-        expandedHeight: 250.0,
+        expandedHeight: 400.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: new InkWell(
             onTap: () {
               userAvatar == null ? _login() : _userDetail();
             },
-            child: ClipPath(
-              clipper: BottomClipper(),
-              child: new Container(
-                padding: EdgeInsets.only(top: 45),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 252, 130, 45),
-                  image: DecorationImage(
-                    image: AssetImage('images/bg_mine.png',),
-                    fit: BoxFit.cover,
-                    alignment: AlignmentDirectional.topCenter,
-                  ),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25))
-                ),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new CircleAvatar(backgroundImage: userAvatar == null ? new AssetImage('images/ic_avatar_default.png') : new NetworkImage(userAvatar), radius: 50),
-                    new Container(
-                      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      child: new Text(
-                        userName == null ? '点击头像登录' : userName,
-                        style: new TextStyle(color: Colors.white, fontSize: 16.0),
+            child: new Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                ClipPath(
+                  clipper: BottomClipper(),
+                  child: new Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 350,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 252, 130, 45),
+                      image: DecorationImage(
+                        image: AssetImage('images/bg_mine.png',),
+                        fit: BoxFit.cover,
+                        alignment: AlignmentDirectional.topCenter,
                       ),
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25))
                     ),
-                  ],
-                )
-              ),
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new CircleAvatar(backgroundImage: userAvatar == null ? new AssetImage('images/ic_avatar_default.png') : new NetworkImage(userAvatar), radius: 50),
+                        new Container(
+                          margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                          child: new Text(
+                            userName == null ? '点击头像登录' : userName,
+                            style: new TextStyle(color: Colors.white, fontSize: 16.0),
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+                new Positioned(
+                  width: MediaQuery.of(context).size.width,
+                  height: 160,
+                  bottom: -80,
+                  child: new Container(
+                    margin: EdgeInsets.only(left: 8, right: 8,),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      border: Border.all(color: Colors.grey[100])
+                    ),
+                    padding: EdgeInsets.only(left:8, right:8, top: 20),
+                    child: new Column(
+                      children: <Widget>[
+                        new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            new Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                new Text('42342元', style: TextStyle(fontSize: 18),),
+                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
+                              ],
+                            ),
+                            new Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                new Text('42342元', style: TextStyle(fontSize: 18),),
+                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                              ],
+                            ),
+                            new Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                new Text('42342元', style: TextStyle(fontSize: 18),),
+                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                              ],
+                            ),
+                            new Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                new Text('42342元', style: TextStyle(fontSize: 18),),
+                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                              ],
+                            ),
+                          ],
+                        ),
+                        new Divider(height: 24,),
+                        new Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new Row(
+                                children: <Widget>[
+                                  new Padding(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    child: Icon(Icons.payment, size: 30, color: Colors.orange,),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text('提现', style: TextStyle(fontSize: 20),),
+                                      Text('可提现金额2100.34元', style: TextStyle(color: Colors.grey),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              new Row(
+                                children: <Widget>[
+                                  new Padding(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    child: Icon(Icons.card_giftcard, size: 30, color: Colors.orange,),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text('转赠', style: TextStyle(fontSize: 20),),
+                                      Text('可转赠金额222.88元', style: TextStyle(color: Colors.grey),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
       ),
