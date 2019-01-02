@@ -38,7 +38,8 @@ class YxApi {
   static final String GET_PRODUCT_LIST = 'api/product/productlist/';
 
   //购买套餐
-  static final String BUY_PRODUCT = '/api/user/85/product/';
+  // /api/user/85/product/1/purchase/
+  static final String BUY_PRODUCT = '/api/user/';
 
 
 //  banner接口
@@ -55,6 +56,11 @@ class YxApi {
 
 
   static final String STAR_DETAIL = 'api/star/detail/';
+
+  ///api/star/20/purchase/
+  static final String BUY_STAR_TIME = '/api/star/';
+
+
 
 //  体系
   static final String HOME_SYSTEM = 'tree/json';

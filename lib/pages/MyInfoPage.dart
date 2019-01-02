@@ -5,6 +5,7 @@ import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
+import 'package:yx/pages/menu/SetPage.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:yx/utils/net/YxApi.dart';
@@ -21,7 +22,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   var userAvatar;
   var userName;
-  var titles = ["我的消费记录", "推广列表", "流水明细", "绑定银行卡", "个人信息", "我的团队", "邀请好友"];
+  var titles = ["我的消费记录", "推广列表", "流水明细", "绑定银行卡", "个人信息", "我的团队", "邀请好友","设置"];
   var imagePaths = [
     "images/ic_my_message.png",
     "images/ic_my_blog.png",
@@ -29,6 +30,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
     "images/ic_my_question.png",
     "images/ic_discover_pos.png",
     "images/ic_my_team.png",
+    "images/ic_my_recommend.png"
     "images/ic_my_recommend.png"
   ];
 
@@ -118,6 +120,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
                 alignment: Alignment.centerLeft,
                 child: new InkWell(
                   onTap: () {
+                    if(title == '设置'){
+                      return _jump(new SetPage());
+                    }
                     print("the is the item of $title");
                   },
                   child:
@@ -203,6 +208,11 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
     });
 
+  }
+  void _jump(Widget pages) {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return pages;
+    }));
   }
 }
 

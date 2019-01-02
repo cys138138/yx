@@ -19,7 +19,7 @@ class _SetPageState extends State<SetPage> {
   void initState() {
     super.initState();
     _menuList.add('清除缓存');
-    _menuList.add('关于我们');
+    _menuList.add('关于大神');
     _menuList.add('退出登录');
   }
 
@@ -43,10 +43,11 @@ class _SetPageState extends State<SetPage> {
       onTap: () {
         switch (index) {
           case 0:
+            _showDialog();
             break;
           case 1:
             Navigator.push(context, new MaterialPageRoute(builder: (context){
-              return NewsDetailPage('https://github.com/LinHuanTanLy','凌宇Ly');
+              return NewsDetailPage('https://github.com/Johvenly/','Johwen');
             }));
             break;
           case 2:
