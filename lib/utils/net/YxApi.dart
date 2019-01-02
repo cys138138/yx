@@ -37,6 +37,9 @@ class YxApi {
 
   static final String GET_PRODUCT_LIST = 'api/product/productlist/';
 
+  ///api/user/85/orderlist/
+  static final String GET_ORDER_LIST = 'api/user/';
+
   //购买套餐
   // /api/user/85/product/1/purchase/
   static final String BUY_PRODUCT = '/api/user/';

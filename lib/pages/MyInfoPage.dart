@@ -5,6 +5,7 @@ import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
+import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
 import 'package:yx/pages/menu/SetPage.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:event_bus/event_bus.dart';
@@ -120,8 +121,13 @@ class _MyInfoPageState extends State<MyInfoPage> {
                 alignment: Alignment.centerLeft,
                 child: new InkWell(
                   onTap: () {
-                    if(title == '设置'){
-                      return _jump(new SetPage());
+                    switch (index){
+                      case 0:
+                        return _jump(new CousumptionOrderListPage());
+                        break;
+                      case 7:
+                        return _jump(new SetPage());
+                        break;
                     }
                     print("the is the item of $title");
                   },
@@ -203,6 +209,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
             print('错误catch s $e');
           }
         });
+      }else{
+        _login();
       }
 
 

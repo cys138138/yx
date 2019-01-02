@@ -123,6 +123,6 @@ class WidgetsUtils {
 
 // 获取appBar
   Widget getAppBar(var title) {
-    return new Text(title, style: new TextStyle(color: Colors.white));
+    return new Center(child: new Text(title, style: new TextStyle(color: Colors.white)));
   }
 }
