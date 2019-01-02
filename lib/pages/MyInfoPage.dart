@@ -170,7 +170,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
   _getUserInfo() async {
     SpUtils.getUserInfo().then((userInfoBean) {
       if(userInfoBean.id == null){
-        return _login();
+//        return _login();
       }
 
       if (userInfoBean != null && userInfoBean.username != null) {

@@ -37,26 +37,28 @@ class _NewsDetailPageState extends State<OrderDetailPage>
     super.initState();
     OsApplication.eventBus.on<GoPageEvent>().listen((event) {
       try{
-        Navigator.of(context).pop();
+//        Navigator.of(context).pop();
         setState(() {
           SpUtils.cleanUserInfo();
         });
-        Navigator.of(context)
-            .push(new MaterialPageRoute(builder: (context) {
-              if(event.pageName == 'LoginPage'){
-                return new LoginPage();
-              }
-              if(event.pageName == 'MyInfoPage'){
-                return new IndexPage();
-              }
 
-        }));
+        if(event.pageName == "LoginPage"){
+          return Navigator.pushNamed(context, '/usre_info');
+        }else if(event.pageName == "MyInfoPage"){
+          return Navigator.pushNamed(context, '/usre_info');
+        }
+
       }catch(e){
 
       }
     });
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
 
 
@@ -125,6 +127,10 @@ class _NewsDetailPageState extends State<OrderDetailPage>
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
+
+
+
+
                         Scaffold.of(context).showBottomSheet(
                               (BuildContext context) {
                             return ModalBottomSheet(packageItem);
@@ -352,6 +358,8 @@ class ModalBottomSheet extends StatefulWidget {
 class _ModalBottomSheetState extends State<ModalBottomSheet>
     with SingleTickerProviderStateMixin {
 
+
+
   int totalNums = 0;
 
   TextEditingController textEditingController = new TextEditingController();
@@ -435,25 +443,19 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
             bottom: 0,
             child: new Row(
               children: <Widget>[
-                Expanded(
-                  child: FloatingActionButton(
-                    child: Text('确认购买'),
+                Container(
+                  decoration: new BoxDecoration(color: Colors.orange),
+                  width: MediaQuery.of(context).size.width,
+                  child: FlatButton(
+                    child: Text('确认购买',style: TextStyle(color: Colors.white),),
                     shape: Border(),
-                    backgroundColor: Colors.orange,
                     onPressed: (){
-                      Navigator.of(context)
-                          .push(new MaterialPageRoute(builder: (context) {
-                        return new IndexPage();
-
-                      }));
-
-//                      OsApplication.eventBus.fire(new GoPageEvent('MyInfoPage'));
-                      return;
-
                       SpUtils.getUserInfo().then((userInfoBean) {
                         if(userInfoBean.id == null){
+                          Future.delayed(Duration(seconds: 2),(){
                             OsApplication.eventBus.fire(new GoPageEvent('LoginPage'));
-                            return;
+                          });
+                          return;
                         }
                         YxHttp.post(YxApi.BUY_PRODUCT+packageItem.id+"/purchase/",headers: {
                           'authorization': 'Token '+userInfoBean.token
@@ -463,16 +465,12 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
 
                           }else{
                             Future.delayed(Duration(seconds: 2),(){
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-                                return MyInfoPage();
-                              }));
+                              OsApplication.eventBus.fire(new GoPageEvent('MyInfoPage'));
                             });
                           }
                         });
 
                       });
-
-
 
                     },
                   ),
@@ -485,6 +483,12 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
     );
   }
   _ModalBottomSheetState(this.packageItem);
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 }
 
 

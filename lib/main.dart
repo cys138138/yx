@@ -10,18 +10,23 @@ import 'package:flutter/rendering.dart';
 //首页
 void main() {
   debugPaintSizeEnabled = false;
-  runApp(new MyApp());
+  runApp(new MyApp(0));
 }
 
 //运行首页
 class MyApp extends StatefulWidget {
+  int _toutesIndex=0;
   @override
   State<StatefulWidget> createState() {
-    return new MyMainState();
+    return new MyMainState(_toutesIndex);
   }
+
+  MyApp(this._toutesIndex);
+
 }
 
 class MyMainState extends State<MyApp> {
+
   // 默认索引第一个tab
   int _tabIndex = 0;
 
@@ -80,6 +85,14 @@ class MyMainState extends State<MyApp> {
       ],
       index: _tabIndex,
     );
+
+    _routes = {
+    // When we navigate to the "/second" route, build the SecondScreen Widget
+    '/usre_info': (context) => MyApp(3),
+    '/star_list': (context) => MyApp(2),
+    '/packege_list': (context) => MyApp(1),
+    '/index': (context) => MyApp(0),
+    };
   }
 
   //获取菜单栏字体样式
@@ -124,7 +137,7 @@ class MyMainState extends State<MyApp> {
       theme: new ThemeData(
         primaryColor: const Color.fromARGB(255, 252, 130, 45),
       ),
-//      routes: _routes,
+      routes: _routes,
       home: new Scaffold(
 //          appBar: new AppBar(
 //            title: new Center(child:
@@ -148,4 +161,6 @@ class MyMainState extends State<MyApp> {
       ),
     );
   }
+
+  MyMainState(this._tabIndex);
 }
