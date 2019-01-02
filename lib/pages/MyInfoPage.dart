@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
+import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
 import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
@@ -124,6 +125,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     switch (index){
                       case 0:
                         return _jump(new CousumptionOrderListPage());
+                        break;
+                      case 1:
+                        return _jump(new PromoteListPage());
                         break;
                       case 7:
                         return _jump(new SetPage());
