@@ -10,6 +10,7 @@ import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/IndexPage.dart';
 import 'package:yx/pages/MyInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
+import 'package:yx/utils/ProgressDialog.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
@@ -38,9 +39,9 @@ class _NewsDetailPageState extends State<OrderDetailPage>
     OsApplication.eventBus.on<GoPageEvent>().listen((event) {
       try{
 //        Navigator.of(context).pop();
-        setState(() {
-          SpUtils.cleanUserInfo();
-        });
+//        setState(() {
+//          SpUtils.cleanUserInfo();
+//        });
 
         if(event.pageName == "LoginPage"){
           return Navigator.pushNamed(context, '/usre_info');
@@ -361,124 +362,142 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
 
 
   int totalNums = 0;
+  bool _loading = false;
 
   TextEditingController textEditingController = new TextEditingController();
 
   PackageClassBean packageItem;
 
   Widget build(BuildContext context) {
-    return new Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200.0,
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        border: Border(top: BorderSide(color: Colors.grey[300])),
-      ),
-      child: Stack(
-        overflow: Overflow.visible,
-        children: <Widget>[
-          //面板内容
-          new Container(
-            child: new Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  //产品规格
-                  new Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 10),
-                    child: Center(child: Text(
-                      '确认购买',
-                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                    )),
-                  ),
-                  new Divider(height: 0.5, color: Colors.grey,),
-                  new Container(
-                    margin: EdgeInsets.only(top: 20.0),
-                    child: Column(
-                      children: <Widget>[
-                        new Center(
-                          child: Text(packageItem.name, style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
-                        ),
-                        new Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                          child: new Center(
-                              child: new Text(
-                                '¥' + packageItem.price,
-                                style: new TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange),
-                              )
-                          ),
-                        ),
 
-                      ],
+    return ProgressDialog(
+      loading: _loading,
+      msg: "购买中。。",
+      child: new Container(
+        width: MediaQuery.of(context).size.width,
+        height: 200.0,
+        decoration: BoxDecoration(
+          color: Colors.white24,
+          border: Border(top: BorderSide(color: Colors.grey[300])),
+        ),
+        child: Stack(
+          overflow: Overflow.visible,
+          children: <Widget>[
+            //面板内容
+            new Container(
+              child: new Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    //产品规格
+                    new Padding(
+                      padding: EdgeInsets.only(top: 15, bottom: 10),
+                      child: Center(child: Text(
+                        '确认购买',
+                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                    new Divider(height: 0.5, color: Colors.grey,),
+                    new Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      child: Column(
+                        children: <Widget>[
+                          new Center(
+                            child: Text(packageItem.name, style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
+                          ),
+                          new Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: new Center(
+                                child: new Text(
+                                  '¥' + packageItem.price,
+                                  style: new TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.orange),
+                                )
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //弹出面板关闭按钮
+            new Positioned(
+              width: 30,
+              height: 30,
+              top: 8,
+              right: 8,
+              child: FloatingActionButton(
+                elevation: 0,
+                backgroundColor: Colors.black26,
+                child: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            //底部按钮组
+            new Positioned(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              bottom: 0,
+              child: new Row(
+                children: <Widget>[
+                  Container(
+                    decoration: new BoxDecoration(color: Colors.orange),
+                    width: MediaQuery.of(context).size.width,
+                    child: FlatButton(
+                      child: Text('确认购买',style: TextStyle(color: Colors.white),),
+                      shape: Border(),
+                      onPressed: (){
+                        SpUtils.getUserInfo().then((userInfoBean) {
+                          setState(() {
+                            _loading = true;
+                          });
+                          if(userInfoBean.id == null){
+                            Future.delayed(Duration(seconds: 2),(){
+                              OsApplication.eventBus.fire(new GoPageEvent('LoginPage'));
+                              setState(() {
+                                _loading = false;
+                              });
+                            });
+
+                            return;
+                          }
+                          YxHttp.post(YxApi.BUY_PRODUCT+packageItem.id+"/purchase/",headers: {
+                            'authorization': 'Token '+userInfoBean.token
+                          }).then((res){
+                            TsUtils.showShort(res["desc"]);
+                            if(res["errors"].length > 0){
+                              setState(() {
+                                _loading = false;
+                              });
+                            }else{
+                              Future.delayed(Duration(seconds: 2),(){
+                                setState(() {
+                                  _loading = false;
+                                });
+                                OsApplication.eventBus.fire(new GoPageEvent('MyInfoPage'));
+                              });
+                            }
+                          });
+
+                        });
+
+                      },
                     ),
                   )
                 ],
               ),
             ),
-          ),
-          //弹出面板关闭按钮
-          new Positioned(
-            width: 30,
-            height: 30,
-            top: 8,
-            right: 8,
-            child: FloatingActionButton(
-              elevation: 0,
-              backgroundColor: Colors.black26,
-              child: Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          //底部按钮组
-          new Positioned(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            bottom: 0,
-            child: new Row(
-              children: <Widget>[
-                Container(
-                  decoration: new BoxDecoration(color: Colors.orange),
-                  width: MediaQuery.of(context).size.width,
-                  child: FlatButton(
-                    child: Text('确认购买',style: TextStyle(color: Colors.white),),
-                    shape: Border(),
-                    onPressed: (){
-                      SpUtils.getUserInfo().then((userInfoBean) {
-                        if(userInfoBean.id == null){
-                          Future.delayed(Duration(seconds: 2),(){
-                            OsApplication.eventBus.fire(new GoPageEvent('LoginPage'));
-                          });
-                          return;
-                        }
-                        YxHttp.post(YxApi.BUY_PRODUCT+packageItem.id+"/purchase/",headers: {
-                          'authorization': 'Token '+userInfoBean.token
-                        }).then((res){
-                          TsUtils.showShort(res["desc"]);
-                          if(res["errors"].length > 0){
-
-                          }else{
-                            Future.delayed(Duration(seconds: 2),(){
-                              OsApplication.eventBus.fire(new GoPageEvent('MyInfoPage'));
-                            });
-                          }
-                        });
-
-                      });
-
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

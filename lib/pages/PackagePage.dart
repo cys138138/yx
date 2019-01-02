@@ -152,7 +152,10 @@ class Package extends State<PackagePage> {
                           Text(itemMap.desc, style: TextStyle(color: Colors.black54),),
                           FlatButton(
                             child: Text('立即购买>>', style: TextStyle(color: Color.fromARGB(255, 252, 130, 45),),),
-                            onPressed: (){},
+                            onPressed: (){
+                              _tapRow(itemMap);
+
+                            },
                           ),
                         ],
                       ),
