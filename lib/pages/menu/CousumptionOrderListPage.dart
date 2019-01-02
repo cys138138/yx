@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:yx/app/OsApplication.dart';
-import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/utils/WidgetsUtils.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
@@ -16,7 +14,7 @@ class CousumptionOrderListPage extends StatefulWidget {
 class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
   List<dynamic> _orderList= List<dynamic>();
   WidgetsUtils widgetsUtils;
-  TextStyle leftMenuStyle = new TextStyle(fontSize: 16.0, color: Colors.black);
+  TextStyle leftMenuStyle = new TextStyle(fontSize: 14.0, color: Colors.black);
 
   @override
   void initState() {
@@ -59,12 +57,7 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
 
   initItem(int index) {
     Map<String,dynamic> _item =  _orderList[index];
-
-    print(_item.containsKey("product"));
     bool type = _item["product"] != null ? true : false;
-    if(type){
-      print(_item["product"] != null);
-    }
     Widget img = type ? new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["product"]["img_url"],width: 80.0,height: 80.0,)) : new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["star"]["img_url"],width: 80.0,height: 80.0,));
     Widget title = type ? Text(_item["product"]["name"],style: leftMenuStyle) : Text(_item["star"]["name"],style: leftMenuStyle);
     Widget trailing = type ? Text(_item["product"]["create_at"]) : Text(_item["star"]["create_at"]);

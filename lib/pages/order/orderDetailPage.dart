@@ -1,20 +1,16 @@
 import 'dart:convert';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/PackageClassBean.dart';
 import 'package:yx/domain/event/GoPageEvent.dart';
-import 'package:yx/domain/event/LoginEvent.dart';
-import 'package:yx/pages/IndexPage.dart';
-import 'package:yx/pages/MyInfoPage.dart';
-import 'package:yx/pages/login/LoginPage.dart';
 import 'package:yx/utils/ProgressDialog.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
+import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
 
 
 class OrderDetailPage extends StatefulWidget {
@@ -41,7 +37,10 @@ class _NewsDetailPageState extends State<OrderDetailPage>
         if(event.pageName == "LoginPage"){
           return Navigator.pushNamed(context, '/usre_info');
         }else if(event.pageName == "MyInfoPage"){
-          return Navigator.pushNamed(context, '/usre_info');
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new CousumptionOrderListPage();
+            
+          }));
         }
 
       }catch(e){
