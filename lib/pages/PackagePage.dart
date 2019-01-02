@@ -128,7 +128,7 @@ class Package extends State<PackagePage> {
                       child: new Padding(
                         padding: EdgeInsets.all(15),
                         child: new Center(
-                          child: Text('¥' + itemMap.price, style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,),
+                          child: Text('¥' + itemMap.price, style: TextStyle(color: Colors.white, fontSize: 25), textAlign: TextAlign.center,),
                         )
                       ),
                     ),

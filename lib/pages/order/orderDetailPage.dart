@@ -38,11 +38,6 @@ class _NewsDetailPageState extends State<OrderDetailPage>
     super.initState();
     OsApplication.eventBus.on<GoPageEvent>().listen((event) {
       try{
-//        Navigator.of(context).pop();
-//        setState(() {
-//          SpUtils.cleanUserInfo();
-//        });
-
         if(event.pageName == "LoginPage"){
           return Navigator.pushNamed(context, '/usre_info');
         }else if(event.pageName == "MyInfoPage"){
@@ -470,7 +465,8 @@ class _ModalBottomSheetState extends State<ModalBottomSheet>
 
                             return;
                           }
-                          YxHttp.post(YxApi.BUY_PRODUCT+packageItem.id+"/purchase/",headers: {
+                          // /api/user/85/product/1/purchase/
+                          YxHttp.post(YxApi.BUY_PRODUCT+userInfoBean.id+'/product/'+packageItem.id+"/purchase/",headers: {
                             'authorization': 'Token '+userInfoBean.token
                           }).then((res){
                             TsUtils.showShort(res["desc"]);

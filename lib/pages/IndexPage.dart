@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_refresh/flutter_refresh.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:yx/pages/news/YxNewsDetailPage.dart';
+import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
