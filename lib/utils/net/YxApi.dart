@@ -50,6 +50,19 @@ class YxApi {
   // /api/user/85/promotelist/
   static final String BUY_PRODUCT = '/api/user/';
 
+  //绑定银行卡
+  //post /api/user/85/bindcard/
+//  {
+//  "bank" : "",
+//  "name" : "测试",
+//  "sms_code" : "1388",
+//  "bank_addr" : "中国银行",
+//  "card_no" : "66666"
+//  }
+//  {"state":false,"desc":"非法请求","content":{},"errors":{"bank":["该字段不能为空。"]}}
+
+  //
+
 
 //  banner接口
   static final String HOME_BANNER = 'api/news/banners/';

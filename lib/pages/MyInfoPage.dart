@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
+import 'package:yx/pages/info/GivingPage.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
@@ -81,21 +82,17 @@ class _MyInfoPageState extends State<MyInfoPage> {
         pinned: false,
         backgroundColor: Colors.transparent,
         brightness: Brightness.dark,
-        expandedHeight: 410.0,
+        expandedHeight: 330.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
-        flexibleSpace: new InkWell(
-            onTap: () {
-              userAvatar == null ? _login() : _userDetail();
-            },
-            child: new Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                ClipPath(
-                  clipper: BottomClipper(),
-                  child: new Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 350,
-                    decoration: BoxDecoration(
+        flexibleSpace: new Stack(
+          overflow: Overflow.visible,
+          children: <Widget>[
+            ClipPath(
+              clipper: BottomClipper(),
+              child: new Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 350,
+                  decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 252, 130, 45),
                       image: DecorationImage(
                         image: AssetImage('images/bg_mine.png',),
@@ -103,9 +100,16 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         alignment: AlignmentDirectional.topCenter,
                       ),
                       borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25))
-                    ),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  child: new InkWell(
+                    onTap: (){
+                      userAvatar == null ? _login() : _userDetail();
+                    },
+                    child: Container(
+
+                        margin: EdgeInsets.only(top: 30.0),
+                        child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         new CircleAvatar(backgroundImage: userAvatar == null ? new AssetImage('images/ic_avatar_default.png') : new NetworkImage(userAvatar), radius: 50),
                         new Container(
@@ -116,102 +120,106 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           ),
                         ),
                       ],
-                    )
-                  ),
+                    )),
+
+                  )
+              ),
+            ),
+            new Positioned(
+              width: MediaQuery.of(context).size.width,
+              height: 160,
+              bottom: 0,
+              child: new Container(
+                margin: EdgeInsets.only(left: 8, right: 8,),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(color: Colors.grey[100])
                 ),
-                new Positioned(
-                  width: MediaQuery.of(context).size.width,
-                  height: 160,
-                  bottom: -80,
-                  child: new Container(
-                    margin: EdgeInsets.only(left: 8, right: 8,),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      border: Border.all(color: Colors.grey[100])
-                    ),
-                    padding: EdgeInsets.only(left:8, right:8, top: 20),
-                    child: new Column(
+                padding: EdgeInsets.only(left:8, right:8, top: 20),
+                child: new Column(
+                  children: <Widget>[
+                    new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        new Row(
+                        new Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['total'].toString()+'元', style: TextStyle(fontSize: 18),),
-                                new Text('我的余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
-                              ],
-                            ),
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(_userDataInfo == null ? "--" : _userDataInfo['all_score'].toString(), style: TextStyle(fontSize: 18),),
-                                new Text('平台总消费', style: TextStyle(color: Colors.orange[200], height: 1.2),),
-                              ],
-                            ),
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['seconds'].toString()+'秒', style: TextStyle(fontSize: 18),),
-                                new Text('可消费总额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
-                              ],
-                            ),
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['dynamic'].toString()+'元', style: TextStyle(fontSize: 18),),
-                                new Text('动态奖励', style: TextStyle(color: Colors.orange[200], height: 1.2),),
-                              ],
-                            ),
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['total'].toString()+'元', style: TextStyle(fontSize: 18),),
+                            new Text('我的余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
                           ],
                         ),
-                        new Divider(height: 24,),
-                        new Padding(
-                          padding: EdgeInsets.only(left: 8, right: 8),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo['all_score'].toString(), style: TextStyle(fontSize: 18),),
+                            new Text('平台总消费', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                          ],
+                        ),
+                        new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['seconds'].toString()+'秒', style: TextStyle(fontSize: 18),),
+                            new Text('可消费总额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                          ],
+                        ),
+                        new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['dynamic'].toString()+'元', style: TextStyle(fontSize: 18),),
+                            new Text('动态奖励', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                          ],
+                        ),
+                      ],
+                    ),
+                    new Divider(height: 24,),
+                    new Padding(
+                      padding: EdgeInsets.only(left: 8, right: 8),
+                      child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          new Row(
                             children: <Widget>[
-                              new Row(
-                                children: <Widget>[
-                                  new Padding(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                    child: Icon(Icons.payment, size: 30, color: Colors.orange,),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text('提现', style: TextStyle(fontSize: 20),),
-                                      Text('可提现'+ (_userDataInfo == null ? "--" : _userDataInfo["balance"]['withdrawable'].toString())+'元', style: TextStyle(color: Colors.grey),),
-                                    ],
-                                  ),
-                                ],
+                              new Padding(
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                child: Icon(Icons.payment, size: 30, color: Colors.orange,),
                               ),
-                              new Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  new Padding(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                    child: Icon(Icons.card_giftcard, size: 30, color: Colors.orange,),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text('转赠', style: TextStyle(fontSize: 20),),
-                                      Text('可转赠'+(_userDataInfo == null ? "--" : _userDataInfo["balance"]['transferrable'].toString())+'元', style: TextStyle(color: Colors.grey),),
-                                    ],
-                                  ),
+                                  Text('提现', style: TextStyle(fontSize: 20),),
+                                  Text('可提现'+ (_userDataInfo == null ? "--" : _userDataInfo["balance"]['withdrawable'].toString())+'元', style: TextStyle(color: Colors.grey),),
                                 ],
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          new Row(
+                            children: <Widget>[
+                              new Padding(
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                child: Icon(Icons.card_giftcard, size: 30, color: Colors.orange,),
+                              ),
+                              new InkWell(onTap: (){
+                                _jump(new GivingPage());
+                              },child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('转赠', style: TextStyle(fontSize: 20),),
+                                  Text('可转赠'+(_userDataInfo == null ? "--" : _userDataInfo["balance"]['transferrable'].toString())+'元', style: TextStyle(color: Colors.grey),),
+                                ],
+                              )),
+                            ],
+                          ),
+
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          )
+          ],
+        )
       ),
       new SliverFixedExtentList(
           delegate:
@@ -336,14 +344,14 @@ class BottomClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    path.lineTo(0.0, size.height - 20);
-    var firstControlPoint = Offset(size.width / 5, size.height);
+    path.lineTo(0.0, size.height - 80);
+    var firstControlPoint = Offset(size.width / 5, size.height - 20);
     var firstPoint = Offset(size.width / 2, size.height);
     path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
         firstPoint.dx, firstPoint.dy);
 
-    var secondControlPoint = Offset(size.width - (size.width / 5), size.height);
-    var secondPoint = Offset(size.width, size.height - 20);
+    var secondControlPoint = Offset(size.width - (size.width / 5), size.height - 20);
+    var secondPoint = Offset(size.width, size.height - 80);
     path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
         secondPoint.dx, secondPoint.dy);
 
