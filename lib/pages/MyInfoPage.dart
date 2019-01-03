@@ -57,9 +57,12 @@ class _MyInfoPageState extends State<MyInfoPage> {
         if (event != null && event.userName != null) {
           userName = event.userName;
           userAvatar = 'http://www.wanandroid.com/resources/image/pc/logo.png';
+          _getInitData();
         } else {
           userName = null;
           userAvatar = null;
+          _userDataInfo = null;
+          _login();
         }
       });
     });
@@ -78,7 +81,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
         pinned: false,
         backgroundColor: Colors.transparent,
         brightness: Brightness.dark,
-        expandedHeight: 400.0,
+        expandedHeight: 410.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: new InkWell(
             onTap: () {
@@ -136,29 +139,29 @@ class _MyInfoPageState extends State<MyInfoPage> {
                             new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                new Text('42342元', style: TextStyle(fontSize: 18),),
-                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
+                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['total'].toString()+'元', style: TextStyle(fontSize: 18),),
+                                new Text('我的余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
                               ],
                             ),
                             new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                new Text('42342元', style: TextStyle(fontSize: 18),),
-                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                                new Text(_userDataInfo == null ? "--" : _userDataInfo['all_score'].toString(), style: TextStyle(fontSize: 18),),
+                                new Text('平台总消费', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                               ],
                             ),
                             new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                new Text('42342元', style: TextStyle(fontSize: 18),),
-                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['seconds'].toString()+'秒', style: TextStyle(fontSize: 18),),
+                                new Text('可消费总额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                               ],
                             ),
                             new Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                new Text('42342元', style: TextStyle(fontSize: 18),),
-                                new Text('余额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
+                                new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['dynamic'].toString()+'元', style: TextStyle(fontSize: 18),),
+                                new Text('动态奖励', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                               ],
                             ),
                           ],
@@ -179,7 +182,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text('提现', style: TextStyle(fontSize: 20),),
-                                      Text('可提现金额2100.34元', style: TextStyle(color: Colors.grey),),
+                                      Text('可提现'+ (_userDataInfo == null ? "--" : _userDataInfo["balance"]['withdrawable'].toString())+'元', style: TextStyle(color: Colors.grey),),
                                     ],
                                   ),
                                 ],
@@ -194,7 +197,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text('转赠', style: TextStyle(fontSize: 20),),
-                                      Text('可转赠金额222.88元', style: TextStyle(color: Colors.grey),),
+                                      Text('可转赠'+(_userDataInfo == null ? "--" : _userDataInfo["balance"]['transferrable'].toString())+'元', style: TextStyle(color: Colors.grey),),
                                     ],
                                   ),
                                 ],
@@ -232,7 +235,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     print("the is the item of $title");
                   },
                   child:
-                  new SingleChildScrollView(
+                  new Container(
                     child:new Column(
                     children: <Widget>[
                       new Padding(
@@ -258,7 +261,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
                 ));
           }, childCount: titles.length),
-          itemExtent: 50.0),
+          itemExtent: 60.0),
     ]);
   }
 
@@ -280,6 +283,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   _getUserInfo() async {
     SpUtils.getUserInfo().then((userInfoBean) {
+      print(userInfoBean);
       if(userInfoBean.id == null){
 //        return _login();
       }

@@ -97,6 +97,7 @@ class _SetPageState extends State<SetPage> {
                       SpUtils.cleanUserInfo();
                       OsApplication.eventBus.fire(new LoginEvent(null));
                       Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: new Text('是的'))
               ],
