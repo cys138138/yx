@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
+import 'package:yx/pages/info/RunWaterListPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
 import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
@@ -49,7 +50,6 @@ class _MyInfoPageState extends State<MyInfoPage> {
   void initState() {
     super.initState();
 
-//    SpUtils.cleanUserInfo();
     _getUserInfo();
     _getInitData();
     OsApplication.eventBus.on<LoginEvent>().listen((event) {
@@ -227,6 +227,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         break;
                       case 1:
                         return _jump(new PromoteListPage());
+                        break;
+                      //流水明细
+                      case 2:
+                        return _jump(new RunWaterListPage());
                         break;
                       case 7:
                         return _jump(new SetPage());

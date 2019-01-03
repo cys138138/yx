@@ -60,7 +60,11 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
     bool type = _item["product"] != null ? true : false;
     Widget img = type ? new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["product"]["img_url"],width: 80.0,height: 80.0,)) : new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["star"]["img_url"],width: 80.0,height: 80.0,));
     Widget title = type ? Text(_item["product"]["name"],style: leftMenuStyle) : Text(_item["star"]["name"],style: leftMenuStyle);
-    Widget trailing = type ? Text(_item["product"]["create_at"]) : Text(_item["star"]["create_at"]);
+
+    DateTime date = DateTime.parse((type ? _item["product"]["create_at"] : _item["star"]["create_at"]));
+    String s_time = date.year.toString() +'-'+ date.month.toString()+'-'+date.day.toString();
+    Widget trailing = Text(s_time);
+
     Widget subtitle = type ? Text(_item["product"]["price"].toString()+'元') : Text(_item["star"]["seconds"].toString()+'秒');
     Widget l_subtitle = Text("订单号： "+_item["serial_no"].toString(),style: new TextStyle(color: Colors.black),);
     Widget r_subtitle = Text(_item["status"].toString(),style: new TextStyle(color: Colors.orange),);

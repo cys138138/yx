@@ -63,7 +63,12 @@ class _PromoteListPage extends State<PromoteListPage> {
   initItem(int index) {
     Map<String, dynamic> _item = _orderList['promo_list'][index];
     Widget title = Text(_item["user"]["mobile"], style: leftMenuStyle);
-    Widget subtitle = Text(_item["user"]["date_join"].toString());
+
+
+    DateTime date = DateTime.parse(_item["user"]["date_join"]);
+        String s_time = date.year.toString() +'-'+ date.month.toString()+'-'+date.day.toString();
+    Widget subtitle = Text(s_time);
+
     Widget l_subtitle = Text(
       _item["user"]["nickname"] +
           " " +

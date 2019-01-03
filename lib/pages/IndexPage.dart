@@ -132,6 +132,9 @@ class NewsListPageState extends State<IndexPage> {
       // 得到列表item的数据
 
       var itemData = listData[i];
+      DateTime date = DateTime.parse(itemData["create_at"]);
+      String s_time = date.year.toString() +'-'+ date.month.toString()+'-'+date.day.toString();
+
       var row = new ListTile(
           leading: new ClipRRect(
             borderRadius: BorderRadius.circular(3.0),
@@ -149,7 +152,7 @@ class NewsListPageState extends State<IndexPage> {
           subtitle: new Padding(
             padding: EdgeInsets.only(top: 5.0),
             child: new Text(
-              itemData["create_at"],
+              s_time,
               style: timeStyle,
             ),
           ));

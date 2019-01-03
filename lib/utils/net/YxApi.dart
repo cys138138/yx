@@ -43,6 +43,9 @@ class YxApi {
   //推广列表 /api/user/85/orderlist/
   static final String GET_PTOMOTE_LIST = 'api/user/';
 
+  //推广列表 /api/user/85/balance/transactions/
+  static final String GET_WATER_LIST = 'api/user/';
+
   //购买套餐
   // /api/user/85/promotelist/
   static final String BUY_PRODUCT = '/api/user/';
