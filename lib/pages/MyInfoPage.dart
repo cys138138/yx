@@ -8,7 +8,7 @@ import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
-import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
+import 'package:yx/pages/info/CousumptionOrderListPage.dart';
 import 'package:yx/pages/menu/SetPage.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:event_bus/event_bus.dart';
@@ -145,28 +145,28 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         new Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['total'].toString()+'元', style: TextStyle(fontSize: 18),),
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['total'].toString()+'元', style: TextStyle(fontSize: 16),),
                             new Text('我的余额', style: TextStyle(color: Colors.orange[200], height: 1.2)),
                           ],
                         ),
                         new Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            new Text(_userDataInfo == null ? "--" : _userDataInfo['all_score'].toString(), style: TextStyle(fontSize: 18),),
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo['all_score'].toString(), style: TextStyle(fontSize: 16),),
                             new Text('平台总消费', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                           ],
                         ),
                         new Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['seconds'].toString()+'秒', style: TextStyle(fontSize: 18),),
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['seconds'].toString()+'秒', style: TextStyle(fontSize: 16),),
                             new Text('可消费总额', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                           ],
                         ),
                         new Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['dynamic'].toString()+'元', style: TextStyle(fontSize: 18),),
+                            new Text(_userDataInfo == null ? "--" : _userDataInfo["balance"]['dynamic'].toString()+'元', style: TextStyle(fontSize: 16),),
                             new Text('动态奖励', style: TextStyle(color: Colors.orange[200], height: 1.2),),
                           ],
                         ),

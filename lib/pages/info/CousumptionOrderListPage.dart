@@ -58,7 +58,7 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
   initItem(int index) {
     Map<String,dynamic> _item =  _orderList[index];
     bool type = _item["product"] != null ? true : false;
-    Widget img = type ? new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["product"]["img_url"],width: 80.0,height: 80.0,)) : new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["star"]["img_url"],width: 80.0,height: 80.0,));
+    Widget img = type ? new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["product"]["img_url"],width: 80.0,height: 60.0,)) : new ClipRRect(borderRadius: BorderRadius.circular(3.0),child: Image.network(_item["star"]["img_url"],width: 80.0,height: 60.0,));
     Widget title = type ? Text(_item["product"]["name"],style: leftMenuStyle) : Text(_item["star"]["name"],style: leftMenuStyle);
 
     DateTime date = DateTime.parse((type ? _item["product"]["create_at"] : _item["star"]["create_at"]));

@@ -10,7 +10,7 @@ import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
-import 'package:yx/pages/menu/CousumptionOrderListPage.dart';
+import 'package:yx/pages/info/CousumptionOrderListPage.dart';
 
 
 class OrderDetailPage extends StatefulWidget {
