@@ -3,6 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yx/app/OsApplication.dart';
+import 'package:yx/domain/event/DataChangeEvent.dart';
+import 'package:yx/domain/event/LoginEvent.dart';
+import 'package:yx/pages/info/BindBankCardPage.dart';
 import 'package:yx/utils/WidgetsUtils.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
@@ -10,14 +14,14 @@ import 'package:yx/utils/net/YxHttp.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
 
 /**
- * 赠送界面
+ * 提现
  */
-class GivingPage extends StatefulWidget {
+class WithdrawPage extends StatefulWidget {
   @override
-  _GivingPagePage createState() => _GivingPagePage();
+  _WithdrawPage createState() => _WithdrawPage();
 }
 
-class _GivingPagePage extends State<GivingPage> {
+class _WithdrawPage extends State<WithdrawPage> {
   List<dynamic> _orderList = List<dynamic>();
   WidgetsUtils widgetsUtils;
   TextStyle leftMenuStyle = new TextStyle(fontSize: 16.0, color: Colors.black);
@@ -25,7 +29,7 @@ class _GivingPagePage extends State<GivingPage> {
   var titleTextStyle = new TextStyle(fontSize: 16.0);
 
   String uname = "";
-  String uid;
+  String bank_card_id;
   var _verifyController = new TextEditingController();
   var textPadding = const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0);
   var _moneyController = new TextEditingController();
@@ -33,11 +37,14 @@ class _GivingPagePage extends State<GivingPage> {
   @override
   void initState() {
     super.initState();
-    transferlist();
+    banklist();
+    OsApplication.eventBus.on<DataChangeEvent>().listen((event) {
+      setState(() {
+        _orderList.clear();
+        banklist();
+      });
+    });
   }
-
-  String _verifyCode = '';
-
   int _seconds = 0;
 
   String _verifyStr = '获取验证码';
@@ -90,28 +97,28 @@ class _GivingPagePage extends State<GivingPage> {
     Widget verifyCodeBtn = new InkWell(
       onTap: (_seconds == 0)
           ? () {
-              setState(() {
-                _startTimer();
-              });
-              //获取验证码
-              SpUtils.getUserInfo().then((userInfoBean) {
-                if (userInfoBean != null && userInfoBean.id != null) {
-                  YxHttp.get(YxApi.GET_FORGOTPASSWORD_SMS_CODE +
-                          userInfoBean.sys_id)
-                      .then((res) {
-                    try {
-                      Map<String, dynamic> data = jsonDecode(res);
-                      if (data["error"] != null) {
-                        return TsUtils.showShort(data["desc"]);
-                      }
-                      return TsUtils.showShort("短信已发送，请留意手机短信");
-                    } catch (e) {
-                      print('错误catch s $e');
-                    }
-                  });
+        setState(() {
+          _startTimer();
+        });
+        //获取验证码
+        SpUtils.getUserInfo().then((userInfoBean) {
+          if (userInfoBean != null && userInfoBean.id != null) {
+            YxHttp.get(YxApi.GET_FORGOTPASSWORD_SMS_CODE +
+                userInfoBean.sys_id)
+                .then((res) {
+              try {
+                Map<String, dynamic> data = jsonDecode(res);
+                if (data["error"] != null) {
+                  return TsUtils.showShort(data["desc"]);
                 }
-              });
-            }
+                return TsUtils.showShort("短信已发送，请留意手机短信");
+              } catch (e) {
+                print('错误catch s $e');
+              }
+            });
+          }
+        });
+      }
           : null,
       child: new Container(
         alignment: Alignment.center,
@@ -170,7 +177,7 @@ class _GivingPagePage extends State<GivingPage> {
                   children: <Widget>[
                     new Expanded(
                       child: new Text(
-                        "转赠给",
+                        "提现到",
                         style: titleTextStyle,
                       ),
                       flex: 1,
@@ -206,7 +213,7 @@ class _GivingPagePage extends State<GivingPage> {
                   children: <Widget>[
                     new Expanded(
                       child: new Text(
-                        "赠送金额",
+                        "提现金额",
                         style: titleTextStyle,
                       ),
                       flex: 1,
@@ -251,10 +258,10 @@ class _GivingPagePage extends State<GivingPage> {
 
                       },
                       child: Text(
-                      "全部转出",
-                      style:
-                      TextStyle(fontSize: 14.0, color: Colors.deepOrange),
-                    ),),
+                        "全部转出",
+                        style:
+                        TextStyle(fontSize: 14.0, color: Colors.deepOrange),
+                      ),),
 
                   ],
                 ),
@@ -299,7 +306,7 @@ class _GivingPagePage extends State<GivingPage> {
                         _post();
                       },
                       child: Text(
-                        "转赠",
+                        "提现",
                         style: TextStyle(color: Colors.white, fontSize: 16.0),
                       )),
                 ),
@@ -312,7 +319,7 @@ class _GivingPagePage extends State<GivingPage> {
 
     return Scaffold(
       appBar: new AppBar(
-        title: widgetsUtils.getAppBar('转赠'),
+        title: widgetsUtils.getAppBar('提现'),
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: new Stack(
@@ -322,8 +329,8 @@ class _GivingPagePage extends State<GivingPage> {
   }
 
   void _post() {
-    if (uid == null) {
-      return TsUtils.showShort("转赠人必选");
+    if (bank_card_id == null) {
+      return TsUtils.showShort("银行卡必选");
     }
     if (_moneyController.text.trim().isEmpty) {
       return TsUtils.showShort("金额必填");
@@ -334,14 +341,14 @@ class _GivingPagePage extends State<GivingPage> {
     SpUtils.getUserInfo().then((userInfoBean) {
       if (userInfoBean != null && userInfoBean.id != null) {
         YxHttp.post(
-            YxApi.POST_TRANSGER + userInfoBean.id + '/balance/transfer/',
+            YxApi.POST_WITHDRAW + userInfoBean.id + '/balance/withdraw/',
             headers: {
               'authorization': 'Token ' + userInfoBean.token
             },
             params: {
               "sms_code": _verifyController.text.trim(),
               "amount": _moneyController.text.trim(),
-              "transfer_to_id": uid
+              "bank_card_id": bank_card_id
             }).then((res1) {
           try {
             Map<String, dynamic> data = res1;
@@ -354,21 +361,27 @@ class _GivingPagePage extends State<GivingPage> {
     });
   }
 
-  void transferlist() {
+  void banklist() {
     SpUtils.getUserInfo().then((userInfoBean) {
       if (userInfoBean != null && userInfoBean.id != null) {
-        print('authorization Token ' + userInfoBean.token);
         YxHttp.get(
-                YxApi.GET_TRANSGER_LIST +
-                    userInfoBean.id +
-                    '/balance/transferlist/',
-                headers: {'authorization': 'Token ' + userInfoBean.token})
+            YxApi.GET_BANK_CARD_LIST +
+                userInfoBean.id +
+                '/bankcardlist/',
+            headers: {'authorization': 'Token ' + userInfoBean.token})
             .then((res) {
           try {
-            Map<String, dynamic> data = jsonDecode(res);
-            print(data);
+            Map<String, dynamic> data = jsonDecode(res);            
             setState(() {
-              _orderList = data['content']["transfer_list"];
+              _orderList = data['content']["bank_card_list"];
+              if(_orderList.length == 0){
+                TsUtils.showShort("还没添加银行卡，请先添加");
+                Future.delayed(Duration(seconds: 2),(){
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+                    return BindBankCardPage();
+                  }));
+                });
+              }
             });
           } catch (e) {
             print('错误catch s $e');
@@ -389,8 +402,8 @@ class _GivingPagePage extends State<GivingPage> {
                 return InkWell(
                     onTap: () {
                       setState(() {
-                        uname = item["nickname"].toString().isEmpty ? item["sys_id"].toString() : item["nickname"].toString();
-                        uid = item["user_id"].toString();
+                        uname = item["bank"].toString();
+                        bank_card_id = item["id"].toString();
                       });
                       Navigator.of(context).pop();
                     },
@@ -400,13 +413,13 @@ class _GivingPagePage extends State<GivingPage> {
                           title: Row(
                             children: <Widget>[
                               Text(
-                                item["nickname"].toString(),
+                                item["bank"].toString(),
                                 style: TextStyle(
                                     color: Colors.black),
                               ),
                               Text(
-                                  "(ID:" +
-                                      item["sys_id"]
+                                  "(卡号:" +
+                                      item["card_no"]
                                           .toString() +
                                       ")",
                                   style: TextStyle(

@@ -74,6 +74,12 @@ class YxApi {
 //返回 {"state":false,"desc":"验证码错误","content":{},"errors":{}}
   static final String POST_TRANSGER = 'api/user/';
 
+  //提现
+ // /api/user/85/balance/withdraw/
+  //参数 {"sms_code":"1","amount":"333","bank_card_id":"34"}
+  static final String POST_WITHDRAW = 'api/user/';
+
+
 //  banner接口
   static final String HOME_BANNER = 'api/news/banners/';
 

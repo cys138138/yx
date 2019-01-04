@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/DataChangeEvent.dart';
-import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/info/BindBankCardPage.dart';
 import 'package:yx/utils/WidgetsUtils.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
@@ -11,7 +10,7 @@ import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
 /**
- * 流水明细
+ * 银行卡列表
  */
 class BankCardListPage extends StatefulWidget {
   @override
