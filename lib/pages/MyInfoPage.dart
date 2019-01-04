@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
+import 'package:yx/pages/info/BindBankCardPage.dart';
 import 'package:yx/pages/info/GivingPage.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
@@ -240,6 +241,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       //流水明细
                       case 2:
                         return _jump(new RunWaterListPage());
+                        break;
+                        //银行卡
+                      case 3:
+                        return _jump(new BindBankCardPage());
                         break;
                       case 7:
                         return _jump(new SetPage());

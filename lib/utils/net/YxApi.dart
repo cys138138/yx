@@ -48,13 +48,14 @@ class YxApi {
 
   //购买套餐
   // /api/user/85/promotelist/
-  static final String BUY_PRODUCT = '/api/user/';
+  static final String BUY_PRODUCT = 'api/user/';
 
   //绑定银行卡
   //post /api/user/85/bindcard/
 //  {"name":"测试","card_no":"666666","sms_code":"3333","bank":"中国工商银行","bank_addr":"广州支行"}
 //  {"state":false,"desc":"非法请求","content":{},"errors":{"bank":["该字段不能为空。"]}}
-  
+
+  static final String BIND_BANK_CARD = 'api/user/';
 
   //获取银行卡列表
   // /api/user/85/bankcardlist/

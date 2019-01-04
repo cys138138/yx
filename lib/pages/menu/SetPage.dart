@@ -18,8 +18,8 @@ class _SetPageState extends State<SetPage> {
   @override
   void initState() {
     super.initState();
-    _menuList.add('清除缓存');
-    _menuList.add('关于大神');
+//    _menuList.add('清除缓存');
+//    _menuList.add('关于大神');
     _menuList.add('退出登录');
   }
 

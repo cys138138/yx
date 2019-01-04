@@ -23,7 +23,6 @@ class _GivingPagePage extends State<GivingPage> {
   List<dynamic> _orderList = List<dynamic>();
   WidgetsUtils widgetsUtils;
   TextStyle leftMenuStyle = new TextStyle(fontSize: 16.0, color: Colors.black);
-  static const double IMAGE_ICON_WIDTH = 30.0;
   static const double ARROW_ICON_WIDTH = 16.0;
   var titleTextStyle = new TextStyle(fontSize: 16.0);
 
