@@ -59,6 +59,7 @@ class YxApi {
 
   //获取银行卡列表
   // /api/user/85/bankcardlist/
+  static final String GET_BANK_CARD_LIST = 'api/user/';
 
   //获取转赠列表
   ///api/user/85/balance/transferlist/

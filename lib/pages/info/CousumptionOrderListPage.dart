@@ -16,6 +16,8 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
   WidgetsUtils widgetsUtils;
   TextStyle leftMenuStyle = new TextStyle(fontSize: 14.0, color: Colors.black);
 
+  bool isDataNull = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,13 +30,21 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
     widgetsUtils = new WidgetsUtils(context);
 
     Widget _body;
-    if (_orderList.length == 0) {
+    if (_orderList.length == 0 && !isDataNull) {
       _body = new Center(
         child: new CircularProgressIndicator(
           backgroundColor: Colors.green,
         ),
       );
-    }else{
+    }
+    else if(isDataNull){
+      _body = new Center(
+        child: new Center(
+          child: Text("暂无数据"),
+        ),
+      );
+    }
+    else{
       _body = new Container(
         margin: EdgeInsets.only(top: 15.0),
         decoration: new BoxDecoration(
@@ -117,6 +127,11 @@ class _CousumptionOrderListPage extends State<CousumptionOrderListPage> {
             print(data);
             setState(() {
               _orderList = data['content']["order_list"];
+              if(_orderList.length == 0){
+                isDataNull = true;
+              }else{
+                isDataNull = false;
+              }
             });
           } catch (e) {
             print('错误catch s $e');

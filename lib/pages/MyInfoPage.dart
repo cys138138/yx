@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:yx/app/OsApplication.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
-import 'package:yx/pages/info/BindBankCardPage.dart';
+import 'package:yx/pages/info/BankCardListPage.dart';
 import 'package:yx/pages/info/GivingPage.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
@@ -12,7 +12,6 @@ import 'package:yx/pages/login/LoginPage.dart';
 import 'package:yx/pages/info/CousumptionOrderListPage.dart';
 import 'package:yx/pages/menu/SetPage.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 
@@ -244,7 +243,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         break;
                         //银行卡
                       case 3:
-                        return _jump(new BindBankCardPage());
+                        return _jump(new BankCardListPage());
                         break;
                       case 7:
                         return _jump(new SetPage());

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yx/app/OsApplication.dart';
+import 'package:yx/domain/event/DataChangeEvent.dart';
 import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/utils/WidgetsUtils.dart';
 import 'package:yx/utils/cache/SpUtils.dart';
@@ -332,6 +333,9 @@ class _BindBankCardPage extends State<BindBankCardPage> {
     if (_cardAddController.text.trim().isEmpty) {
       return TsUtils.showShort("开户行必填");
     }
+    if (_verifyController.text.trim().isEmpty) {
+      return TsUtils.showShort("验证码必填");
+    }
     SpUtils.getUserInfo().then((userInfoBean) {
       if (userInfoBean != null && userInfoBean.id != null) {
         YxHttp.post(
@@ -350,6 +354,7 @@ class _BindBankCardPage extends State<BindBankCardPage> {
           try {
             Map<String, dynamic> data = res1;
             TsUtils.showShort(data["desc"]);
+            OsApplication.eventBus.fire(new DataChangeEvent(''));
           } catch (e) {
             print('错误catch s $e');
           }
