@@ -30,8 +30,8 @@ class _GivingPagePage extends State<GivingPage> {
   String uname = "";
   String uid;
   var _verifyController = new TextEditingController();
-
   var textPadding = const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0);
+  var _moneyController = new TextEditingController();
 
   @override
   void initState() {
@@ -72,8 +72,7 @@ class _GivingPagePage extends State<GivingPage> {
   Widget _buildVerifyCodeEdit() {
     var node = new FocusNode();
     Widget verifyCodeEdit = new TextField(
-      onChanged: (str) {
-      },
+      onChanged: (str) {},
       decoration: new InputDecoration(
         hintText: '请输入验证码',
         border: InputBorder.none,
@@ -94,23 +93,29 @@ class _GivingPagePage extends State<GivingPage> {
     Widget verifyCodeBtn = new InkWell(
       onTap: (_seconds == 0)
           ? () {
-        setState(() {
-          _startTimer();
-        });
-
-        YxHttp.get(YxApi.GET_SMS).then((res){
-          try {
-            Map<String, dynamic> map = jsonDecode(res);
-            print(map);
-            var data = map['content']['sms_data'];
-            setState(() {
-              _verifyCode = data['sms_code'];
-            });
-          } catch (e) {
-            return TsUtils.showShort("获取验证码出错了");
-          }
-        });
-      } : null,
+              setState(() {
+                _startTimer();
+              });
+              //获取验证码
+              SpUtils.getUserInfo().then((userInfoBean) {
+                if (userInfoBean != null && userInfoBean.id != null) {
+                  YxHttp.get(YxApi.GET_FORGOTPASSWORD_SMS_CODE +
+                          userInfoBean.sys_id)
+                      .then((res) {
+                    try {
+                      Map<String, dynamic> data = jsonDecode(res);
+                      if (data["error"] != null) {
+                        return TsUtils.showShort(data["desc"]);
+                      }
+                      return TsUtils.showShort("短信已发送，请留意手机短信");
+                    } catch (e) {
+                      print('错误catch s $e');
+                    }
+                  });
+                }
+              });
+            }
+          : null,
       child: new Container(
         alignment: Alignment.center,
         width: 80.0,
@@ -160,56 +165,38 @@ class _GivingPagePage extends State<GivingPage> {
       );
       _body.add(Container(
         child: new Container(
-          child:new Column(
+          child: new Column(
             children: <Widget>[
               new Padding(
                 padding: textPadding,
                 child: new Row(
                   children: <Widget>[
                     new Expanded(
-                        child: new Text(
-                          "转赠给",
-                          style: titleTextStyle,
-                        ),
+                      child: new Text(
+                        "转赠给",
+                        style: titleTextStyle,
+                      ),
                       flex: 1,
                     ),
                     new Expanded(
+                      child: InkWell(
                         child: new Text(
                           uname,
-                          style: TextStyle(fontSize: 16.0,color: Colors.deepOrange),
+                          style:
+                          TextStyle(fontSize: 16.0, color: Colors.deepOrange),
                         ),
+                        onTap: () {
+                          _showSelect(context);
+                        },
+                      ),
                       flex: 3,
                     ),
                     InkWell(
                       child: rightArrowIcon,
-                      onTap: (){
-                        showModalBottomSheet(context: context, builder: (context){
-                          return ListView.builder(
-                            itemCount: _orderList.length,
-                            itemBuilder: (context,index){
-                            var item = _orderList[index];
-                            return InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    uname = item["nickname"].toString();
-                                    uid = item["user_id"].toString();
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                                child: Column(children: <Widget>[
-                                  ListTile(
-                                    title: Row(children: <Widget>[
-                                      Text(item["nickname"].toString(),style: TextStyle(color: Colors.black),),
-                                      Text("(ID:"+item["sys_id"].toString()+")",style: TextStyle(color: Colors.grey)),
-                                    ],
-                                    ),
-                                  ),
-                                  Divider(height: 1.0,),
-                                ],)
-                            );
-                          });
-                        });
-                    },),
+                      onTap: () {
+                        _showSelect(context);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -229,6 +216,7 @@ class _GivingPagePage extends State<GivingPage> {
                     ),
                     new Expanded(
                       child: new TextField(
+                        controller: _moneyController,
                         decoration: new InputDecoration(
                           border: InputBorder.none,
                           hintText: "输入金额",
@@ -242,7 +230,35 @@ class _GivingPagePage extends State<GivingPage> {
                       ),
                       flex: 3,
                     ),
-                    Text("全部转出",style: TextStyle(fontSize: 14.0,color: Colors.deepOrange),)
+                    InkWell(
+                      onTap: (){
+                        SpUtils.getUserInfo().then((userInfoBean) {
+                          if(userInfoBean !=null && userInfoBean.id != null){
+                            YxHttp.get(YxApi.GET_MY_HOME_DATA+userInfoBean.id,headers: {
+                              'authorization': 'Token ' + userInfoBean.token
+                            }).then((res){
+                              try {
+                                Map<String,dynamic> data = jsonDecode(res);
+                                setState(() {
+                                  _moneyController.text = data['content']["balance"]['total'].toString();
+                                });
+                              } catch (e) {
+                                print('错误catch s $e');
+                              }
+                            });
+                          }else{
+                            TsUtils.showShort("先去登录");
+                            Navigator.of(context).pop();
+                          }
+                        });
+
+                      },
+                      child: Text(
+                      "全部转出",
+                      style:
+                      TextStyle(fontSize: 14.0, color: Colors.deepOrange),
+                    ),),
+
                   ],
                 ),
               ),
@@ -271,6 +287,25 @@ class _GivingPagePage extends State<GivingPage> {
               ),
               new Divider(
                 height: 1.0,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 30.0),
+                alignment: Alignment.center,
+                child: new Container(
+                  width: MediaQuery.of(context).size.width - 50,
+                  height: 40.0,
+                  decoration: new BoxDecoration(
+                      color: Colors.deepOrange,
+                      borderRadius: BorderRadius.circular(3.0)),
+                  child: new FlatButton(
+                      onPressed: () {
+                        _post();
+                      },
+                      child: Text(
+                        "转赠",
+                        style: TextStyle(color: Colors.white, fontSize: 16.0),
+                      )),
+                ),
               )
             ],
           ),
@@ -289,12 +324,48 @@ class _GivingPagePage extends State<GivingPage> {
     );
   }
 
+  void _post() {
+    if (uid == null) {
+      return TsUtils.showShort("转赠人必选");
+    }
+    if (_moneyController.text.trim().isEmpty) {
+      return TsUtils.showShort("金额必填");
+    }
+    if (_verifyController.text.trim().isEmpty) {
+      return TsUtils.showShort("验证码必填");
+    }
+    SpUtils.getUserInfo().then((userInfoBean) {
+      if (userInfoBean != null && userInfoBean.id != null) {
+        YxHttp.post(
+            YxApi.POST_TRANSGER + userInfoBean.id + '/balance/transfer/',
+            headers: {
+              'authorization': 'Token ' + userInfoBean.token
+            },
+            params: {
+              "sms_code": _verifyController.text.trim(),
+              "amount": _moneyController.text.trim(),
+              "transfer_to_id": uid
+            }).then((res1) {
+          try {
+            Map<String, dynamic> data = res1;
+            TsUtils.showShort(data["desc"]);
+          } catch (e) {
+            print('错误catch s $e');
+          }
+        });
+      }
+    });
+  }
+
   void transferlist() {
     SpUtils.getUserInfo().then((userInfoBean) {
       if (userInfoBean != null && userInfoBean.id != null) {
         print('authorization Token ' + userInfoBean.token);
-        YxHttp.get(YxApi.GET_TRANSGER_LIST + userInfoBean.id + '/balance/transferlist/',
-            headers: {'authorization': 'Token ' + userInfoBean.token})
+        YxHttp.get(
+                YxApi.GET_TRANSGER_LIST +
+                    userInfoBean.id +
+                    '/balance/transferlist/',
+                headers: {'authorization': 'Token ' + userInfoBean.token})
             .then((res) {
           try {
             Map<String, dynamic> data = jsonDecode(res);
@@ -308,5 +379,50 @@ class _GivingPagePage extends State<GivingPage> {
         });
       }
     });
+  }
+
+  void _showSelect(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+              itemCount: _orderList.length,
+              itemBuilder: (context, index) {
+                var item = _orderList[index];
+                return InkWell(
+                    onTap: () {
+                      setState(() {
+                        uname = item["nickname"].toString().isEmpty ? item["sys_id"].toString() : item["nickname"].toString();
+                        uid = item["user_id"].toString();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Row(
+                            children: <Widget>[
+                              Text(
+                                item["nickname"].toString(),
+                                style: TextStyle(
+                                    color: Colors.black),
+                              ),
+                              Text(
+                                  "(ID:" +
+                                      item["sys_id"]
+                                          .toString() +
+                                      ")",
+                                  style: TextStyle(
+                                      color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1.0,
+                        ),
+                      ],
+                    ));
+              });
+        });
   }
 }

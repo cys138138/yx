@@ -67,6 +67,8 @@ class YxHttp {
     if (OsApplication.cookie != null) {
       params['Cookie'] = OsApplication.cookie;
     }
+    print("post data");
+    print(params);
     http.Response res = await http.post(_url, body: params,headers: headers);
     return _dealWithRes(res, saveCookie: saveCookie);
   }
