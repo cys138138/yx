@@ -288,8 +288,8 @@ class _RegisterPageState extends State<RegisterPage> {
             map['sys_id'] = '0';
           SpUtils.map2UserInfo(map).then((userInfoBean) {
             if (userInfoBean != null) {
-              OsApplication.eventBus
-                  .fire(new LoginEvent(userInfoBean.username));
+              String name = userInfoBean.username == null ? userInfoBean.sys_id.toString() : userInfoBean.username.toString();
+              OsApplication.eventBus.fire(new LoginEvent(name));
               SpUtils.saveUserInfo(userInfoBean);
               Navigator.pop(context);
             }

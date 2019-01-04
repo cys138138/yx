@@ -55,7 +55,7 @@ class SpUtils {
       var id = map['user_id'];
       var name = map['nickname'];
       var token = map['token'];
-      var sys_id = map['sys_id'];
+      var sys_id = map['sysid'];
       UserInfoBean userInfoBean = new UserInfoBean(id, name, token,sys_id);
       return userInfoBean;
     } else {

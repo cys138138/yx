@@ -55,6 +55,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
     _getInitData();
     OsApplication.eventBus.on<LoginEvent>().listen((event) {
       setState(() {
+        print(event.userName.toString());
         if (event != null && event.userName != null) {
           userName = event.userName;
           userAvatar = 'http://www.wanandroid.com/resources/image/pc/logo.png';

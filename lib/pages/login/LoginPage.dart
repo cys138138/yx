@@ -145,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
         Map<String, dynamic> map = result['content'];
         SpUtils.map2UserInfo(map).then((userInfoBean) {
           if (userInfoBean != null) {
-            OsApplication.eventBus.fire(new LoginEvent(userInfoBean.username));
+            String name = userInfoBean.username == null ? userInfoBean.sys_id.toString() : userInfoBean.username.toString();
+            print(name);
+            OsApplication.eventBus.fire(new LoginEvent(name));
             SpUtils.saveUserInfo(userInfoBean);
             Navigator.pop(context);
           }
