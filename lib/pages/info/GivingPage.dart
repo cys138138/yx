@@ -165,38 +165,37 @@ class _GivingPagePage extends State<GivingPage> {
           child: new Column(
             children: <Widget>[
               new Padding(
-                padding: textPadding,
-                child: new Row(
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Text(
-                        "转赠给",
-                        style: titleTextStyle,
-                      ),
-                      flex: 1,
-                    ),
-                    new Expanded(
-                      child: InkWell(
-                        child: new Text(
-                          uname,
-                          style:
-                          TextStyle(fontSize: 16.0, color: Colors.deepOrange),
+                  padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                  child: InkWell(
+                    child: new Row(
+                      children: <Widget>[
+                        new Expanded(
+                          child: new Text(
+                            "转赠给",
+                            style: titleTextStyle,
+                          ),
+                          flex: 1,
                         ),
-                        onTap: () {
-                          _showSelect(context);
-                        },
-                      ),
-                      flex: 3,
+                        new Expanded(
+                          child: new Text(
+                            uname,
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.deepOrange),
+                          ),
+                          flex: 3,
+                        ),
+                        InkWell(
+                          child: rightArrowIcon,
+                          onTap: () {
+                            _showSelect(context);
+                          },
+                        ),
+                      ],
                     ),
-                    InkWell(
-                      child: rightArrowIcon,
-                      onTap: () {
-                        _showSelect(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                    onTap: () {
+                      _showSelect(context);
+                    },
+                  )),
               new Divider(
                 height: 1.0,
               ),
@@ -228,34 +227,36 @@ class _GivingPagePage extends State<GivingPage> {
                       flex: 3,
                     ),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         SpUtils.getUserInfo().then((userInfoBean) {
-                          if(userInfoBean !=null && userInfoBean.id != null){
-                            YxHttp.get(YxApi.GET_MY_HOME_DATA+userInfoBean.id,headers: {
-                              'authorization': 'Token ' + userInfoBean.token
-                            }).then((res){
+                          if (userInfoBean != null && userInfoBean.id != null) {
+                            YxHttp.get(YxApi.GET_MY_HOME_DATA + userInfoBean.id,
+                                headers: {
+                                  'authorization': 'Token ' + userInfoBean.token
+                                }).then((res) {
                               try {
-                                Map<String,dynamic> data = jsonDecode(res);
+                                Map<String, dynamic> data = jsonDecode(res);
                                 setState(() {
-                                  _moneyController.text = data['content']["balance"]['total'].toString();
+                                  _moneyController.text = data['content']
+                                          ["balance"]['total']
+                                      .toString();
                                 });
                               } catch (e) {
                                 print('错误catch s $e');
                               }
                             });
-                          }else{
+                          } else {
                             TsUtils.showShort("先去登录");
                             Navigator.of(context).pop();
                           }
                         });
-
                       },
                       child: Text(
-                      "全部转出",
-                      style:
-                      TextStyle(fontSize: 14.0, color: Colors.deepOrange),
-                    ),),
-
+                        "全部转出",
+                        style:
+                            TextStyle(fontSize: 14.0, color: Colors.deepOrange),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -389,7 +390,9 @@ class _GivingPagePage extends State<GivingPage> {
                 return InkWell(
                     onTap: () {
                       setState(() {
-                        uname = item["nickname"].toString().isEmpty ? item["sys_id"].toString() : item["nickname"].toString();
+                        uname = item["nickname"].toString().isEmpty
+                            ? item["sys_id"].toString()
+                            : item["nickname"].toString();
                         uid = item["user_id"].toString();
                       });
                       Navigator.of(context).pop();
@@ -401,16 +404,10 @@ class _GivingPagePage extends State<GivingPage> {
                             children: <Widget>[
                               Text(
                                 item["nickname"].toString(),
-                                style: TextStyle(
-                                    color: Colors.black),
+                                style: TextStyle(color: Colors.black),
                               ),
-                              Text(
-                                  "(ID:" +
-                                      item["sys_id"]
-                                          .toString() +
-                                      ")",
-                                  style: TextStyle(
-                                      color: Colors.grey)),
+                              Text("(ID:" + item["sys_id"].toString() + ")",
+                                  style: TextStyle(color: Colors.grey)),
                             ],
                           ),
                         ),

@@ -172,36 +172,36 @@ class _WithdrawPage extends State<WithdrawPage> {
           child: new Column(
             children: <Widget>[
               new Padding(
-                padding: textPadding,
-                child: new Row(
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Text(
-                        "提现到",
-                        style: titleTextStyle,
+                padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+                child: InkWell(
+                  child: new Row(
+                    children: <Widget>[
+                      new Expanded(
+                        child: new Text(
+                          "提现到",
+                          style: titleTextStyle,
+                        ),
+                        flex: 1,
                       ),
-                      flex: 1,
-                    ),
-                    new Expanded(
-                      child: InkWell(
+                      new Expanded(
                         child: new Text(
                           uname,
                           style:
                           TextStyle(fontSize: 16.0, color: Colors.deepOrange),
                         ),
+                        flex: 3,
+                      ),
+                      InkWell(
+                        child: rightArrowIcon,
                         onTap: () {
                           _showSelect(context);
                         },
                       ),
-                      flex: 3,
-                    ),
-                    InkWell(
-                      child: rightArrowIcon,
-                      onTap: () {
-                        _showSelect(context);
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
+                  onTap: () {
+                    _showSelect(context);
+                  },
                 ),
               ),
               new Divider(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:yx/utils/cache/SpUtils.dart';
 import 'package:yx/utils/net/YxApi.dart';
 import 'package:yx/utils/net/YxHttp.dart';
 import 'package:yx/utils/toast/TsUtils.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 /**
@@ -36,13 +38,30 @@ class _QrcodePage extends State<QrcodePage> {
   }
 
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return new File('$path/abc.png');
+  }
+
+  Future<File> save(List<int> bytes) async {
+    final file = await _localFile;
+    return file.writeAsBytes(bytes);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     widgetsUtils = new WidgetsUtils(context);
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       appBar: new AppBar(
-        title: widgetsUtils.getAppBar('绑定银行卡'),
+        title: widgetsUtils.getAppBar('我的专属码'),
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: new SingleChildScrollView(
@@ -69,6 +88,9 @@ class _QrcodePage extends State<QrcodePage> {
                   ),
                   child: FlatButton(
                       onPressed: (){
+                        rootBundle.load("images/ic_avatar_default.png").then((ByteData  byteData){
+                          save(byteData.buffer.asUint8List(0));
+                        });
                         Clipboard.setData(ClipboardData(text: _promtoCode)).then((res){
                             TsUtils.showShort("邀请码已复制至剪切板");
                         });
