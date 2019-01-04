@@ -6,6 +6,7 @@ import 'package:yx/domain/event/LoginEvent.dart';
 import 'package:yx/pages/info/BankCardListPage.dart';
 import 'package:yx/pages/info/GivingPage.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
+import 'package:yx/pages/info/QrcodePage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/info/WithdrawPage.dart';
@@ -345,6 +346,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       //银行卡
                       case 3:
                         return _jump(new BankCardListPage());
+                        break;
+                        //二维码
+                      case 6:
+                        return _jump(new QrcodePage());
                         break;
                       case 7:
                         return _jump(new SetPage());

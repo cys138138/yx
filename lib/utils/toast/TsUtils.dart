@@ -1,15 +1,14 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 class TsUtils{
   static showShort(String msg){
     Fluttertoast.showToast(
         msg: msg,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 1,
-        backgroundColor: const Color(0xFF000000),
-        textColor: const Color(0xFFffffff)
+        backgroundColor: Colors.black,
+        textColor: Colors.white
     );
   }
 }
