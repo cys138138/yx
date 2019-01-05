@@ -80,6 +80,9 @@ class YxApi {
   static final String POST_WITHDRAW = 'api/user/';
 
 
+  static final String SAVE_USERINFO = 'api/user/userinfo/';
+
+
 //  banner接口
   static final String HOME_BANNER = 'api/news/banners/';
 

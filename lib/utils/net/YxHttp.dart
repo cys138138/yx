@@ -70,6 +70,27 @@ class YxHttp {
     print("post data");
     print(params);
     http.Response res = await http.post(_url, body: params,headers: headers);
+    print(res.body);
+    return _dealWithRes(res, saveCookie: saveCookie);
+  }
+
+  //  post请求
+  static Future<Map> put(String url,
+      {Map<String, String> params, bool saveCookie = false,Map<String, String> headers}) async {
+    if (params == null) {
+      params = new Map();
+    }
+    if (headers == null) {
+      headers = new Map();
+    }
+    String _url = YxApi.BASE_URL + url;
+    if (OsApplication.cookie != null) {
+      params['Cookie'] = OsApplication.cookie;
+    }
+    print("post data");
+    print(params);
+    http.Response res = await http.put(_url, body: params,headers: headers);
+    print(res.body);
     return _dealWithRes(res, saveCookie: saveCookie);
   }
 

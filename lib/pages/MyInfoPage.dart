@@ -8,6 +8,7 @@ import 'package:yx/pages/info/GivingPage.dart';
 import 'package:yx/pages/info/PromoteListPage.dart';
 import 'package:yx/pages/info/QrcodePage.dart';
 import 'package:yx/pages/info/RunWaterListPage.dart';
+import 'package:yx/pages/info/SetInfoPage.dart';
 import 'package:yx/pages/info/UserInfoPage.dart';
 import 'package:yx/pages/info/WithdrawPage.dart';
 import 'package:yx/pages/login/LoginPage.dart';
@@ -34,7 +35,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
     "流水明细",
     "绑定银行卡",
     "个人信息",
-    "我的团队",
+//    "我的团队",
     "邀请好友",
     "设置"
   ];
@@ -69,7 +70,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
         print(event.userName.toString());
         if (event != null && event.userName != null) {
           userName = event.userName;
-          userAvatar = 'http://www.wanandroid.com/resources/image/pc/logo.png';
+          userAvatar = 'images/default_avatar.png';
           _getInitData();
         } else {
           userName = null;
@@ -118,10 +119,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
                             bottomRight: Radius.circular(25))),
                     child: new InkWell(
                       onTap: () {
-                        userAvatar == null ? _login() : _userDetail();
+                        userAvatar == null ? _login() : null;
                       },
                       child: Container(
-                          margin: EdgeInsets.only(top: 30.0),
+                          margin: EdgeInsets.only(top: 40.0),
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -129,7 +130,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                   backgroundImage: userAvatar == null
                                       ? new AssetImage(
                                           'images/ic_avatar_default.png')
-                                      : new NetworkImage(userAvatar),
+                                      : new AssetImage(userAvatar),
                                   radius: 50),
                               new Container(
                                 margin: const EdgeInsets.fromLTRB(
@@ -347,11 +348,15 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       case 3:
                         return _jump(new BankCardListPage());
                         break;
+                      //个人信息
+                      case 4:
+                        return _jump(new SetInfoPage(_userDataInfo));
+                        break;
                         //二维码
-                      case 6:
+                      case 5:
                         return _jump(new QrcodePage());
                         break;
-                      case 7:
+                      case 6:
                         return _jump(new SetPage());
                         break;
                     }
@@ -412,7 +417,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
       if (userInfoBean != null && userInfoBean.username != null) {
         setState(() {
           userName = userInfoBean.username;
-          userAvatar = 'http://www.wanandroid.com/resources/image/pc/logo.png';
+          userAvatar = 'images/default_avatar.png';
         });
       }
     });
